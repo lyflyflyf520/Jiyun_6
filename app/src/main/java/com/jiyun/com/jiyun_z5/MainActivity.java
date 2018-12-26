@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         imageView = new ImageView(this);
+        ViewGroup.LayoutParams params =  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
+        imageView.setLayoutParams(params);
 
         xRecyclerView = findViewById(R.id.xrecyclerview);
 
@@ -84,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
         xRecyclerView.setLayoutManager(layoutManager);
 
         xRecyclerView.addHeaderView(imageView);
+
+//        imageView.setMaxHeight(100);
+
         //添加Android自带的分割线
         xRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
 
