@@ -83,10 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
         xRecyclerView = findViewById(R.id.xrecyclerview);
 
+        //添加一个布局管理器
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         xRecyclerView.setLayoutManager(layoutManager);
-
+        //添加头部布局
         xRecyclerView.addHeaderView(imageView);
 
 //        imageView.setMaxHeight(100);
@@ -100,12 +101,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 Log.d(TAG, "onRefresh: ");
+                xRecyclerView.refreshComplete();
             }
 
             @Override
             public void onLoadMore() {
 
                 Log.d(TAG, "onLoadMore: ");
+                xRecyclerView.loadMoreComplete();
             }
         });
 //        loadImgData();
