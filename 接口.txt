@@ -1,0 +1,25 @@
+验证码接口：http://yun918.cn/study/public/index.php/verify
+get  无参   返回结果：{"code":200,"ret":"success","data":"qosb"}
+
+注册接口：http://yun918.cn/study/public/index.php/register
+post  参数（String username,String password,String phone,String verify）
+
+
+登录接口：http://yun918.cn/study/public/index.php/login
+post 参数（String username,String password） 注：username可以是注册的用户名或手机号
+
+
+获取新闻类型地址：http://yun918.cn/study/public/index.php/newchannel;
+获取方式get
+返回数据格式如下：
+{"code":200,"ret":"success","channels":[{"id":1,"name":"头条","channel":"top"},{"id":2,"name":"社会","channel":"shehui"},{"id":3,"name":"国内","channel":"guonei"},{"id":4,"name":"国际","channel":"yule"},{"id":5,"name":"娱乐","channel":"shehui"},{"id":6,"name":"体育","channel":"tiyu"},{"id":7,"name":"军事","channel":"junshi"},{"id":8,"name":"科技","channel":"keji"},{"id":9,"name":"财经","channel":"caijing"},{"id":10,"name":"时尚","channel":"shishang"}]}
+
+
+
+获取新闻数据接口地址：http://toutiao-ali.juheapi.com/toutiao/index;
+获取方式get
+参数:
+1.type=”newchannel接口中获取到的对应的channel的值”
+2.Header “Authorization:APPCODE db33b75c89524a56ac94d6519e106a59”
+
+
