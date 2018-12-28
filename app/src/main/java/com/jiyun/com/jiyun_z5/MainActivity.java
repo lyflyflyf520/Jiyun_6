@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -48,13 +50,20 @@ public class MainActivity extends AppCompatActivity {
             if (msg.what == REQUEST_IMG) {
 
                 Bitmap bitmap = (Bitmap) msg.obj;
+
                 imageView.setImageBitmap(bitmap);
             } else if (msg.what == REQUEST_TEXT) {
                 try {
+
                     String result = (String) msg.obj;
+                    if (TextUtils.isEmpty(CacheUtils.getJSONData(Constant.home_list_url))) {
+                        CacheUtils.saveJSONData(Constant.home_list_url, result);
+                    } else {
+                        result = CacheUtils.getJSONData(Constant.home_list_url);
+                    }
                     JSONObject jsonObject = new JSONObject(result);
                     JSONArray jsonArray = jsonObject.optJSONArray("data");
-                    for (int x=0;x<jsonArray.length();x++){
+                    for (int x = 0; x < jsonArray.length(); x++) {
                         JSONObject obj = jsonArray.getJSONObject(x);
                         BannerItem bannerItem = new BannerItem();
                         bannerItem.setTitle(obj.optString("title"));
@@ -72,13 +81,14 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private List<BannerItem> bannerItemList = new ArrayList<>();
     private RecyclerAdapter recyclerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         imageView = new ImageView(this);
-        ViewGroup.LayoutParams params =  new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,150);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150);
         imageView.setLayoutParams(params);
 
         xRecyclerView = findViewById(R.id.xrecyclerview);
@@ -93,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 //        imageView.setMaxHeight(100);
 
         //添加Android自带的分割线
-        xRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
+        xRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         recyclerAdapter = new RecyclerAdapter(this);
         xRecyclerView.setAdapter(recyclerAdapter);
@@ -112,6 +122,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 //        loadImgData();
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         new Thread() {
             public void run() {
                 loadImgByOkHttp();
@@ -121,11 +139,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     public void loadDataByOkHttp() {
         try {
+            //post方式提交的数据
+//            FormBody formBody = new FormBody.Builder()
+//                    .add("name", "android基础")
+//                    .add("price", "50")
+//                    .build();
+
             OkHttpClient okHttpClient = new OkHttpClient();
-            Request request = new Request.Builder() .url(home_list_url)  .build();
+            Request request = new Request.Builder()
+//                    .post(formBody)
+                    .url(home_list_url)
+                    .build();
             Call call = okHttpClient.newCall(request);
 
             Response response = call.execute();
@@ -154,7 +180,18 @@ public class MainActivity extends AppCompatActivity {
             Response response = call.execute();
             InputStream inputStream = response.body().byteStream();
 
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            Bitmap bitmap = null;
+
+            CacheUtils2 cacheUtils2 = new CacheUtils2();
+
+            if (cacheUtils2.getBitmapFromMemCache(img_url) != null) {
+                bitmap = cacheUtils2.getBitmapFromMemCache(img_url);
+            } else {
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                cacheUtils2.addBitmapToMemory(img_url, bitmap);
+            }
+
+
             //下面这是把图片携带在Message里面
             Message message = Message.obtain();
             message.obj = bitmap;
