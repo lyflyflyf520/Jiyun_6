@@ -48,7 +48,7 @@ public class DiskLruCacheUtils {
     }
 
     /**
-     * @param key imgFilepath
+     * @param key imgFilepath   www.baidu.coom/xx@_xx.jpg--->   xdffdjlkdslfkjl;jx;lldkjfler
      */
     public void saveBitmap2Disk(final String key) {
 
@@ -61,6 +61,7 @@ public class DiskLruCacheUtils {
 
                         OutputStream outputStream = editor.newOutputStream(0);
                         downloadUrlToStream(key, outputStream);
+
                         editor.commit();
                     }
                 } catch (IOException e) {
@@ -71,7 +72,6 @@ public class DiskLruCacheUtils {
 
 
     }
-
     public Bitmap getBitmap2key(String key) {
         Bitmap bitmap = null;
 

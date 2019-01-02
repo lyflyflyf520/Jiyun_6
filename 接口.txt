@@ -30,3 +30,5 @@ post 参数（String username,String password） 注：username可以是注册�
 参数：(String  key,String  file);
 key    上传文件的文件夹（自己随意传）
 file  固定的"file"参数里面放上传文件的流内容
+
+
