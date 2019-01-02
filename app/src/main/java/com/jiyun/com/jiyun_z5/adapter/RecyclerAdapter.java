@@ -1,14 +1,10 @@
-package com.jiyun.com.jiyun_z5;
+package com.jiyun.com.jiyun_z5.adapter;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.jiyun.com.jiyun_z5.R;
+import com.jiyun.com.jiyun_z5.bean.BannerItem;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -30,9 +24,6 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static android.support.constraint.Constraints.TAG;
-import static com.jiyun.com.jiyun_z5.Constant.home_list_url;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
 
