@@ -61,6 +61,7 @@ public class DiskLruCacheUtils {
 
                         OutputStream outputStream = editor.newOutputStream(0);
                         downloadUrlToStream(key, outputStream);
+                        editor.commit();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -76,8 +77,7 @@ public class DiskLruCacheUtils {
 
         try {
 
-            DiskLruCache.Snapshot snapshot = diskLruCache.get("096c32795592f54876e093a13374fc47");
-//            DiskLruCache.Snapshot snapshot = diskLruCache.get(hashKeyForDisk(key));
+            DiskLruCache.Snapshot snapshot = diskLruCache.get(hashKeyForDisk(key));
             if (snapshot != null) {
                 InputStream is = snapshot.getInputStream(0);
                 bitmap = BitmapFactory.decodeStream(is);

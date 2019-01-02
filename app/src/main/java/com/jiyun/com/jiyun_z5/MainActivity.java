@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
 
 
-//        initXutilsQuest();
     }
     @AfterPermissionGranted(1010)
     private void methodRequiresTwoPermission() {

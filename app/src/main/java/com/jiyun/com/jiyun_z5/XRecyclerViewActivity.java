@@ -18,6 +18,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jiyun.com.jiyun_z5.adapter.RecyclerAdapter;
 import com.jiyun.com.jiyun_z5.bean.BannerItem;
 import com.jiyun.com.jiyun_z5.utils.Constant;
+import com.jiyun.com.jiyun_z5.utils.ImageLoader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +37,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import utils.CacheUtils;
+import utils.DiskLruCacheUtils;
 
 import static com.jiyun.com.jiyun_z5.utils.Constant.home_list_url;
 import static com.jiyun.com.jiyun_z5.utils.Constant.img_url;
@@ -52,8 +54,8 @@ public class XRecyclerViewActivity extends AppCompatActivity {
             if (msg.what == REQUEST_IMG) {
 
                 Bitmap bitmap = (Bitmap) msg.obj;
-                if (imgLoader != null) {
-                    imgLoader.saveMemoryCache(img_url, bitmap);
+                if (diskLruCacheUtils != null) {
+                    diskLruCacheUtils.saveBitmap2Disk(img_url);
                 }
                 imageView.setImageBitmap(bitmap);
             } else if (msg.what == REQUEST_TEXT) {
@@ -86,6 +88,7 @@ public class XRecyclerViewActivity extends AppCompatActivity {
     private List<BannerItem> bannerItemList = new ArrayList<>();
     private RecyclerAdapter recyclerAdapter;
     ImageLoader imgLoader;
+    utils.DiskLruCacheUtils diskLruCacheUtils ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +97,10 @@ public class XRecyclerViewActivity extends AppCompatActivity {
 
         imgLoader = new ImageLoader(this.getApplicationContext());
 
+        diskLruCacheUtils = new DiskLruCacheUtils(this);
 
         imageView = new ImageView(this);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 150);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200);
         imageView.setLayoutParams(params);
 
         xRecyclerView = findViewById(R.id.xrecyclerview);
@@ -107,8 +111,6 @@ public class XRecyclerViewActivity extends AppCompatActivity {
         xRecyclerView.setLayoutManager(layoutManager);
         //添加头部布局
         xRecyclerView.addHeaderView(imageView);
-
-//        imageView.setMaxHeight(100);
 
         //添加Android自带的分割线
         xRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -139,22 +141,16 @@ public class XRecyclerViewActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (imgLoader.getBitmapFromCache(img_url) != null) {
-            imageView.setImageBitmap(imgLoader.getBitmapFromCache(img_url));
+        if (diskLruCacheUtils.getBitmap2key(img_url) != null) {
+            imageView.setImageBitmap(diskLruCacheUtils.getBitmap2key(img_url));
         } else {
-            new Thread() {
-                public void run() {
-                    loadImgByOkHttp();
-                }
-            }.start();
+
+            loadImgByOkHttp();
+
 
         }
 
-        new Thread() {
-            public void run() {
-                loadDataByOkHttp();
-            }
-        }.start();
+        loadDataByOkHttp();
 
 
     }
