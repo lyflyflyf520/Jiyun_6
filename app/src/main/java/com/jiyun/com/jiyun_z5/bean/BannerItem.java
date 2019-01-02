@@ -1,4 +1,4 @@
-package com.jiyun.com.jiyun_z5;
+package com.jiyun.com.jiyun_z5.bean;
 
 public class BannerItem {
 

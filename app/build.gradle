@@ -32,7 +32,14 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.8.0") {
         exclude group: "com.android.support"
     }
-    implementation "com.android.support:support-fragment:26.1.0"
+
+    implementation 'com.jakewharton:disklrucache:2.0.2'
+
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
+    implementation 'pub.devrel:easypermissions:2.0.0'
+
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
