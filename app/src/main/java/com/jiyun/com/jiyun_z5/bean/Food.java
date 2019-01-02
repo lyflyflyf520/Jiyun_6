@@ -1,5 +1,7 @@
 package com.jiyun.com.jiyun_z5.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,11 +17,17 @@ public class Food {
      * num : 1666
      */
 
+    @SerializedName("id")
     private String id;
+    @SerializedName("title")
     private String title;
+    @SerializedName("pic")
     private String pic;
+    @SerializedName("collect_num")
     private String collect_num;
+    @SerializedName("food_str")
     private String food_str;
+    @SerializedName("num")
     private int num;
 
 

@@ -11,8 +11,12 @@ public class Urls {
 
     static {
         HashMap<String,String>  className = new HashMap<>();
-        className.put("XRecyclerViewActivity","test xRecyclerview");
 
+        className.put("XRecyclerViewActivity","test xRecyclerview");
+        classList.add(className);
+
+        className = new HashMap<>();
+        className.put("TestRetrofitActivity","retrofit的get方式获取demo");
         classList.add(className);
 
     }
