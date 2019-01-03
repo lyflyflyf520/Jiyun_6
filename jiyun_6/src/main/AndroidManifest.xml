@@ -25,7 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".XRecyclerViewActivity" />
-        <activity android:name=".TestRetrofitActivity"></activity>
+        <activity android:name=".TestRetrofitActivity" />
+        <activity android:name=".UploadActivity"></activity>
     </application>
 
 </manifest>
