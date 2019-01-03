@@ -14,77 +14,23 @@ import retrofit2.http.Query;
  *
  * retrofit 知识点
  *
- * 要掌握的 get post query
+ * 要掌握的
+ * Get
+ * Post
+ * Url
+ * Query
+ * QueryMap
+ * Field
+ * FieldMap
+ * Path
+ * Body
+ * Part
+ * MiulPart
+ * Header
+ * Headers
+ * FormUrlEncode
  *
- * GET
- *      形式：url + 参数形式。      eg: http://www.qubaobei.com/ios/cf/dish_list.php?stage_id=1&limit=20&page=1
- *      注解样式
- *      入参query样式。query querymap  这两个主要适用与Url
- *
- *     @GET("/ios/cf/dish_list.php?stage_id=1&limit=20")
- *     Call<ResponseBody> getFoodList(@Query("page") String page);
- *
- *     Call<ResponseBody> getFoodList(@QueryMap Map<String, String> options);
- *
- *
- * POST
- *
- *      @FormUrlEncoded
- *      @POST("./")   post路径如果没有二级路径写“./”
- *
- *      Field FieldMap 适用与请求体上
- *
- *      @FormUrlEncoded
- *      @POST("v1/login")
- *      Call<ResponseBody> userLogin(@Field("phone") String phone, @Field("password") String password);
- *
- *      @FormUrlEncoded
- *      @POST("book/reviews")
- *      Call<String> addReviews(@FieldMap Map<String, String> fields);
- * path
- *      接收一个字符串表示接口 path ，与 baseUrl 组成完整的 Url；
- *      public interface BlogService{
- *       @GET("blog/{id}")
- *       Call<ResponseBody> getBlog(@Path("id") int id);
- *      }
- * body
- *
- *      使用 @Body 注解，指定一个对象作为 request body 。
- *      @POST("users/new")
- *      Call<User> createUser(@Body User user);
- *
- * Part  MiulPart
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- * headers  使用 @Headers 注解设置固定的请求头，所有请求头不会相互覆盖，即使名字相同。
- *
- *      @Headers("Cache-Control: max-age=640000")
- *      @GET("widget/list")
- *      Call<List<Widget>> widgetList();
- *
- *       @Headers({ "Accept: application/vnd.github.v3.full+json","User-Agent: Retrofit-Sample-App"})
- *       @GET("users/{username}")Call<User>
- *      getUser(@Path("username") String username);
- *
- *
- *
- *  header
- *
- *       使用 @Header 注解---动态更新请求头，匹配的参数必须提供给 @Header ，若参数值为 null ，这个头会被省略，否则，会使用参数值的 toString 方法的返回值
- *
- *       @GET("user")
- *       Call<User> getUser(@Header("Authorization") String authorization)
- *
- *
- * FormUrlEncode  请求体是 From 表单
+ * @url  可以参考：https://www.jianshu.com/p/58bb50b2401f
  *
  */
 
