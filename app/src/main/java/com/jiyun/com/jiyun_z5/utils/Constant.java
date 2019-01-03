@@ -6,6 +6,7 @@ public class Constant {
     public static String home_list_url ="http://www.wanandroid.com/banner/json";
 //    public static final String  food_url="http://www.qubaobei.com/ios/cf/dish_list.php?stage_id=1&limit=20&page=1";
     public static final String  food_base_url="http://www.qubaobei.com";
+    public static final String  post_url ="http://yun918.cn/study/public/index.php/register/";
 
 //     "desc": "一起来做个App吧",
 //             "id": 10,

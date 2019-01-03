@@ -42,22 +42,28 @@ public class TestRetrofitActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
 
+        retroGetTest();
+        retroPostTest();
+
+    }
+
+    private void retroPostTest() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.food_base_url)
+                .baseUrl(Constant.post_url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         RetroRequestService service = retrofit.create(RetroRequestService.class);
 
-        Call<ResponseBody> call  = service.getFoodList("1");
+        Call<ResponseBody> call  = service.postRegister("chents","123123","18790906767","wyef");
 
         call.enqueue(new Callback<ResponseBody>(){
 
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "onResponse: response="+response.body());
+                Log.d(TAG, "onResponse: post==response="+response.body());
                 try {
-                    textview1.setText(response.body().string());
+                    textview2.setText(response.body().string());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -65,6 +71,42 @@ public class TestRetrofitActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                Log.d(TAG, "onFailure: post==error="+t.getMessage());
+                try {
+                    textview2.setText(t.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    public void retroGetTest(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.food_base_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        RetroRequestService service = retrofit.create(RetroRequestService.class);
+
+        Call<Food> call  = service.getFoodList("1");
+
+        call.enqueue(new Callback<Food>(){
+
+            @Override
+            public void onResponse(Call<Food> call, Response<Food> response) {
+                Log.d(TAG, "onResponse: response="+response.body());
+                try {
+                    textview1.setText(response.body().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Food> call, Throwable t) {
 
                 Log.d(TAG, "onFailure: error="+t.getMessage());
                 try {
@@ -74,6 +116,7 @@ public class TestRetrofitActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
 
