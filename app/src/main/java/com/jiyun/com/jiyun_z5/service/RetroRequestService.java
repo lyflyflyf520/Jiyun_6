@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -20,7 +21,7 @@ public interface RetroRequestService {
      * @return
      */
     @GET("/ios/cf/dish_list.php?stage_id=1&limit=20")
-    Call<List<Food>> getFoodList(@Query("page") String page);
+    Call<ResponseBody> getFoodList(@Query("page") String page);
 
 
 }
