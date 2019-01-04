@@ -48,10 +48,11 @@ public interface RetroRequestService {
     Call<Food> getFoodList(@Query("page") String page);
 
     @GET("/ios/cf/dish_list.php?")
-    Call<Food> getFoodList(@QueryMap Map<String,String> options);
+    Call<ResponseBody> getFoodList(@QueryMap Map<String,String> options);
 
     @FormUrlEncoded
     @POST("./")
     Call<ResponseBody> postRegister(@Field("username") String username,@Field("username") String password ,
                                     @Field("username") String phone,@Field("username") String verify);
+
 }

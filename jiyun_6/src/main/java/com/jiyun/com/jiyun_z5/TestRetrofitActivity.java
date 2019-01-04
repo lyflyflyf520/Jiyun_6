@@ -89,38 +89,41 @@ public class TestRetrofitActivity extends AppCompatActivity {
     }
 
     public void retroGetTest() {
+        // 第一步
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constant.food_base_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .baseUrl(Constant.food_base_url)   // 传入请求url
+                .addConverterFactory(GsonConverterFactory.create()) // 结果用GSON 解析
+                .build();   // 构建retrofit对象
 
         RetroRequestService service = retrofit.create(RetroRequestService.class);
-
+        // 第二步
         HashMap<String, String> keyMap = new HashMap<>();
             keyMap.put("stage_id", "1");
             keyMap.put("limit", "20");
             keyMap.put("page", "1");
-//        Call<Food> call = service.getFoodList("1");
-        Call<Food> call = service.getFoodList(keyMap);
-
-        call.enqueue(new Callback<Food>() {
+//        Call<ResponseBody> call = service.getFoodList("1");
+        Call<ResponseBody> call = service.getFoodList(keyMap);
+        // 第三步
+        call.enqueue(new Callback<ResponseBody>() {
 
             @Override
-            public void onResponse(Call<Food> call, Response<Food> response) {
-                Log.d(TAG, "onResponse: response=" + response.body());
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    textview1.setText(response.body().toString());
-                } catch (Exception e) {
+                Log.d(TAG, "onResponse: response=" + response.body().string());
+
+                String result = response.body().string();
+                    textview1.setText(result);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onFailure(Call<Food> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable throwable) {
 
-                Log.d(TAG, "onFailure: error=" + t.getMessage());
+                Log.d(TAG, "onFailure: error=" + throwable.getMessage());
                 try {
-                    textview1.setText(t.getMessage());
+                    textview1.setText(throwable.getMessage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
