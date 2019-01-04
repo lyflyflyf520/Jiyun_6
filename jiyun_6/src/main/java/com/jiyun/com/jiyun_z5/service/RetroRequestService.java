@@ -2,6 +2,8 @@ package com.jiyun.com.jiyun_z5.service;
 
 import com.jiyun.com.jiyun_z5.bean.Food;
 
+import java.util.Map;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -9,6 +11,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 /**
  *
@@ -43,6 +46,9 @@ public interface RetroRequestService {
      */
     @GET("/ios/cf/dish_list.php?stage_id=1&limit=20")
     Call<Food> getFoodList(@Query("page") String page);
+
+    @GET("/ios/cf/dish_list.php?")
+    Call<Food> getFoodList(@QueryMap Map<String,String> options);
 
     @FormUrlEncoded
     @POST("./")
