@@ -23,7 +23,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okio.BufferedSink;
 
-import static com.jiyun.com.jiyun_z5.utils.Constant.home_list_url;
 import static com.jiyun.com.jiyun_z5.utils.Constant.post_url;
 
 /**
