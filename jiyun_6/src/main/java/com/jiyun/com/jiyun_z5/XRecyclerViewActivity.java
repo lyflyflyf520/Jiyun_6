@@ -24,8 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ import okhttp3.Response;
 import utils.CacheUtils;
 import utils.DiskLruCacheUtils;
 
+import static com.jiyun.com.jiyun_z5.utils.Constant.food_base_url;
+import static com.jiyun.com.jiyun_z5.utils.Constant.food_url;
 import static com.jiyun.com.jiyun_z5.utils.Constant.home_list_url;
 import static com.jiyun.com.jiyun_z5.utils.Constant.img_url;
 
@@ -175,7 +179,6 @@ public class XRecyclerViewActivity extends AppCompatActivity {
                 public void onFailure(Call call, IOException e) {
 
                 }
-
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
@@ -232,7 +235,10 @@ public class XRecyclerViewActivity extends AppCompatActivity {
 
     }
 
-    public void loadImgData() {
+    /**
+     * 通过httpUrlConnection获取图片对象
+     */
+    public void loadImgByHttpUrlConnection() {
 
         new Thread() {
             public void run() {
@@ -269,5 +275,30 @@ public class XRecyclerViewActivity extends AppCompatActivity {
 
             }
         }.start();
+    }
+
+    /**
+     * 获取文本信息
+     */
+    public void loadStrByHttpUrlconnection(){
+        try {
+            URL url = new URL(food_url);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+            InputStream inputStream = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream ));
+            StringBuffer sb = new StringBuffer();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+
+            String reponse = sb.toString();
+
+            Log.d(TAG, "loadStrByHttpUrlconnection: "+reponse);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

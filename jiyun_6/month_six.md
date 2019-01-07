@@ -1,0 +1,121 @@
+# Jiyun_z5
+
+Android高级-第01天-网络框架-HttpURLConnection和OkHttp3
+
+ 复习Http协议（请求响应格式，请求头）
+ OkHttp3 简介概述
+ OkHttp3 配置依赖
+ OkHttp3 发送异步请求（GET/POST）
+ OkHttp3 发送同步请求（GET/POST）(简单带过)
+ 异步和同步的区别
+ 掌握RecyclerView分页加载框架使用（下拉刷新，上拉加载）（xRecyclerView）
+ 项目搭建用okhttp3实现数据请求
+
+Android高级-第2天-网络框架-okhttp3进阶
+请求头处理（Header）
+请求体处理（Form表单，String字符串，流，文件）
+结合实际应用接口练习使用
+接口参数拼接
+拦截器：网络拦截器，缓存拦截器，日志拦截器， 重定向拦截器（教看文档）
+HttpURLconnection及OkHttp3的对比分析
+OkHttp源码分析（设计模式，线程池的使用）
+
+Android高级-第3天-网络框架-Retrofit2
+Retrofit2的概述以及特点
+Retrofit2的使用步骤
+Retrofit2常用注解Get   Post    Url   Query   QueryMap   Field  FieldMap   Path   Body  Part  MiulPart   Header   Headers  FormUrlEncode
+
+Android高级-第4天-网络框架-Retrofit2
+Retrofit2发送GET、POST请求
+Retrofit2发送同步异步请求
+Retrofit2及OkHttp3的区别
+Retrofit2源码分析（底层OkHttp3，注解了解，反射了解）
+搭建项目中用retrofit实现数据请求
+
+Android高级-第5天-网络框架-GreenDao
+复习SQL语句
+复习SQLliteDatabase（案例）
+GreenDao的概述以及特点
+GreenDao配置依赖（Application）
+GreenDao的使用
+通过Entity类生成关联类
+GreenDao注解的使用
+GreenDao的增删改查
+
+Android高级-第6天-网络框架-GreenDao
+GreenDao数据库升级
+GreenDao案例使用
+项目中实现数据存储到本地，以及本地数据获取显示到界面
+
+Android高级-第7天-网络框架-Rxjava RxAndroid
+Rxjava的概述以及特点
+Rxjava使用
+常用操作符：ConcatMap  Map  FlatMap  Flow(案例使用)
+Rxjava结合retrofit使用（线程切换）
+AsyncTask与RxJava的区别
+Rxjava讲解观察者模式
+项目中rxjava结合retrofit实现数据接口的请求。
+
+Android高级-第8天-MVP
+常见项目架构模型，图例
+经典的架构模型MVC(讲解说明)
+MVP架构搭建
+MVP模型搭建案例一：Button 点击 TextView显示（搭建架构）
+MVP模型搭建案例二：登录处理（模拟数据）
+
+Android高级-第9天-MVP
+MVP模型搭建案例三：列表展示网络请求（网络）
+MVP模型搭建案例四：列表展示数据库数据（数据库）
+
+Android高级-第10天-MVP 依赖注入
+MVP模型搭建案例五：列表展示网络请求，数据库数据（综合案例）
+AndroidAnnotations
+EventBus的使用 （订阅发布模式）
+EventBus普通传值和粘性传值
+ButterKnife的介绍和使用
+
+Android高级-第11天-图片处理
+Glide简介
+Glide的使用
+Glide图片缓存
+Fresco简介
+Fresco的使用
+Fresco图片缓存
+BitmapFactory类
+图片二次采样
+Matrix、ColorMatrix+
+圆角和圆形图片（Glide 3.0和4.0以上的区别）
+项目把之前项目列表中的图片用Glide和fresco加载显示
+
+Android高级-第12天-图片处理  文件上传下载
+LRU算法案例
+LRU讲解概述以及原理
+LruCache图片内存缓存
+DiskLruCache 图片硬盘缓存
+OkHttp，Retrofit上传文件
+
+Android高级-第13天-文件上传下载
+线程复习
+多线程上传（线程池+HttpURLConnetcion）
+头像上传
+视频上传
+相册缩略图列表
+
+Android高级-第14天-文件上传下载
+多线程下载 apk安装
+项目中httpurlconnection完成文件的上传和下载
+
+Android高级-第15天-文件上传下载
+项目案例：okhttp,retrofit完成文件的上传和下载
+
+Android高级-第16-18天-高级项目（不包含MVP）
+利用okhttp,retrofit,rxjava,greendao,viewpager,tablayout,fragment实现新闻频道
+新闻数据加载和显示，收藏对应的新闻数据利用greendao存入本地数据库。
+并在单独的界面显示收藏的新闻数据
+
+
+Android高级-第17、18天-高级项目（不包含MVP）
+利用htturlconnection,okhttp,retrofit实现apk包单线程和多线程下载安装。
+用httpurlconnection实现下载进度。
+利用httpurlconnection,okhttp,retrofit实现文件上传，
+用httpurlconnection实现上传进度。

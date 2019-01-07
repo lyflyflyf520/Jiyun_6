@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.jiyun.com.jiyun_z5.bean.Food;
 import com.jiyun.com.jiyun_z5.service.RetroRequestService;
 import com.jiyun.com.jiyun_z5.utils.Constant;
 
@@ -98,9 +97,9 @@ public class TestRetrofitActivity extends AppCompatActivity {
         RetroRequestService service = retrofit.create(RetroRequestService.class);
         // 第二步
         HashMap<String, String> keyMap = new HashMap<>();
-            keyMap.put("stage_id", "1");
-            keyMap.put("limit", "20");
-            keyMap.put("page", "1");
+        keyMap.put("stage_id", "1");
+        keyMap.put("limit", "20");
+        keyMap.put("page", "1");
 //        Call<ResponseBody> call = service.getFoodList("1");
         Call<ResponseBody> call = service.getFoodList(keyMap);
         // 第三步
@@ -109,9 +108,9 @@ public class TestRetrofitActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                Log.d(TAG, "onResponse: response=" + response.body().string());
+                    Log.d(TAG, "onResponse: response=" + response.body().string());
 
-                String result = response.body().string();
+                    String result = response.body().string();
                     textview1.setText(result);
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -26,7 +26,8 @@
         </activity>
         <activity android:name=".XRecyclerViewActivity" />
         <activity android:name=".TestRetrofitActivity" />
-        <activity android:name=".UploadActivity"></activity>
+        <activity android:name=".UploadActivity" />
+        <activity android:name=".TestOkhttpPostActivity"></activity>
     </application>
 
 </manifest>
