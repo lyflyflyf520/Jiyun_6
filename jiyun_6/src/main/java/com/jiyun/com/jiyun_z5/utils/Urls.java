@@ -1,5 +1,7 @@
 package com.jiyun.com.jiyun_z5.utils;
 
+import com.jiyun.com.jiyun_z5.DbDaoActivity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,5 +25,8 @@ public class Urls {
         className.put("TestRetrofitActivity", "retrofit的get方式获取demo");
         classList.add(className);
 
+        className = new HashMap<>();
+        className.put(DbDaoActivity.class.getSimpleName(), "演示greendao的操作流程，增删改查");
+        classList.add(className);
     }
 }

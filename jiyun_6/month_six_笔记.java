@@ -31,7 +31,8 @@ Android高级-第3天-网络框架-Retrofit2
 掌握：
     Retrofit2的概述以及特点
     Retrofit2的使用步骤
-    Retrofit2常用注解Get   Post    Url   Query   QueryMap   Field  FieldMap   Path   Body  Part  MiulPart   Header   Headers  FormUrlEncode
+    Retrofit2常用注解Get   Post    Url   Query   QueryMap   Field  FieldMap   Path   Body  Part
+        MiulPart   Header   Headers  FormUrlEncode
 参考：
     TestRetrofitActivity类
 
