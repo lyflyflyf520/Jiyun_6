@@ -28,7 +28,7 @@
         android:id="@+id/edittext_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="输入id,无id获取全部"
+        android:hint="输入id,无id默认删除全部"
         />
     <Button
         android:id="@+id/delete"

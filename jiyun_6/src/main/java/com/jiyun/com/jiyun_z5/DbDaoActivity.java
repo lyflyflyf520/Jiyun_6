@@ -2,12 +2,15 @@ package com.jiyun.com.jiyun_z5;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.jiyun.com.jiyun_z5.bean.BannerItem;
+import com.jiyun.com.jiyun_z5.dao.BannerItemDao;
 import com.jiyun.com.jiyun_z5.dao.DaoSession;
 
 import java.util.List;
@@ -33,6 +36,8 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
     Button queryBtn;
     @BindView(R.id.result)
     TextView resultTv;
+    @BindView(R.id.edittext_delete)
+    EditText deleteEdit;
 
     private static final String TAG = "DbDaoActivity";
 
@@ -52,6 +57,9 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+//            case R.id.edittext_delete:
+//                deleteData();
+//                break;
             case R.id.insert:
                 insertData();
                 break;
@@ -69,11 +77,13 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
 
     public void insertData() {
 
-        double d = Math.random();
+        Random random = new Random(1000);//指定种子数字
+        int index = random.nextInt(100);
+//        double d = Math.random();
 
         DaoSession daoSession = JiyunApplication.getDaoSession();
         BannerItem bannerItem = new BannerItem();
-        bannerItem.setId((int)d);
+        bannerItem.setId(index);
         bannerItem.setImagePath(img_url);
         bannerItem.setDesc("this is description");
         bannerItem.setUrl("this is url  ");
@@ -82,7 +92,16 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
 
     public void deleteData() {
         DaoSession daoSession = JiyunApplication.getDaoSession();
-        daoSession.getBannerItemDao().deleteAll();
+        if (TextUtils.isEmpty(deleteEdit.getText().toString())) {
+            daoSession.getBannerItemDao().deleteAll();
+        } else {
+            String id = deleteEdit.getText().toString().trim();
+
+            BannerItem bannerItem = queryDataById(id);
+            daoSession.getBannerItemDao().delete(bannerItem);
+        }
+
+
     }
 
     public void updateData() {
@@ -115,11 +134,21 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
         for (BannerItem bannerItem : bannerItemList) {
 
             Log.d(TAG, "queryData: " + bannerItem.getId());
-            str += bannerItem.getId()+"," ;
+            str += bannerItem.getId() + ",";
         }
 
         resultTv.setText(str);
 
     }
+
+    public BannerItem queryDataById(String id) {
+        DaoSession daoSession = JiyunApplication.getDaoSession();
+
+        BannerItem bannerItem = daoSession.getBannerItemDao().queryBuilder().where(BannerItemDao.Properties.Id.eq(id)).build().unique();
+
+        return bannerItem;
+
+    }
+
 
 }
