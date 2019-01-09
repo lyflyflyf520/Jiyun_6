@@ -38,12 +38,25 @@
         android:text="删除" />
 
 </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="修改" />
+        <EditText
+            android:id="@+id/edittext_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="输入id,无id默认删除全部"
+            />
+        <Button
+            android:id="@+id/update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/query"

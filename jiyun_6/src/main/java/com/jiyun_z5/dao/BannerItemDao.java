@@ -25,10 +25,11 @@ public class BannerItemDao extends AbstractDao<BannerItem, Long> {
      */
     public static class Properties {
         public final static Property Desc = new Property(0, String.class, "desc", false, "DESC");
-        public final static Property Id = new Property(1, long.class, "id", true, "_id");
-        public final static Property ImagePath = new Property(2, String.class, "imagePath", false, "IMAGE_PATH");
-        public final static Property Title = new Property(3, String.class, "title", false, "TITLE");
-        public final static Property Url = new Property(4, String.class, "url", false, "URL");
+        public final static Property Bid = new Property(1, Long.class, "bid", true, "bid");
+        public final static Property ItmeId = new Property(2, long.class, "itmeId", false, "ITME_ID");
+        public final static Property ImagePath = new Property(3, String.class, "imagePath", false, "IMAGE_PATH");
+        public final static Property Title = new Property(4, String.class, "title", false, "TITLE");
+        public final static Property Url = new Property(5, String.class, "url", false, "URL");
     }
 
 
@@ -45,10 +46,11 @@ public class BannerItemDao extends AbstractDao<BannerItem, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BANNER_ITEM\" (" + //
                 "\"DESC\" TEXT," + // 0: desc
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ," + // 1: id
-                "\"IMAGE_PATH\" TEXT," + // 2: imagePath
-                "\"TITLE\" TEXT," + // 3: title
-                "\"URL\" TEXT);"); // 4: url
+                "\"bid\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 1: bid
+                "\"ITME_ID\" INTEGER NOT NULL ," + // 2: itmeId
+                "\"IMAGE_PATH\" TEXT," + // 3: imagePath
+                "\"TITLE\" TEXT," + // 4: title
+                "\"URL\" TEXT);"); // 5: url
     }
 
     /** Drops the underlying database table. */
@@ -65,21 +67,26 @@ public class BannerItemDao extends AbstractDao<BannerItem, Long> {
         if (desc != null) {
             stmt.bindString(1, desc);
         }
-        stmt.bindLong(2, entity.getId());
+ 
+        Long bid = entity.getBid();
+        if (bid != null) {
+            stmt.bindLong(2, bid);
+        }
+        stmt.bindLong(3, entity.getItmeId());
  
         String imagePath = entity.getImagePath();
         if (imagePath != null) {
-            stmt.bindString(3, imagePath);
+            stmt.bindString(4, imagePath);
         }
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(4, title);
+            stmt.bindString(5, title);
         }
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(5, url);
+            stmt.bindString(6, url);
         }
     }
 
@@ -91,37 +98,43 @@ public class BannerItemDao extends AbstractDao<BannerItem, Long> {
         if (desc != null) {
             stmt.bindString(1, desc);
         }
-        stmt.bindLong(2, entity.getId());
+ 
+        Long bid = entity.getBid();
+        if (bid != null) {
+            stmt.bindLong(2, bid);
+        }
+        stmt.bindLong(3, entity.getItmeId());
  
         String imagePath = entity.getImagePath();
         if (imagePath != null) {
-            stmt.bindString(3, imagePath);
+            stmt.bindString(4, imagePath);
         }
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(4, title);
+            stmt.bindString(5, title);
         }
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(5, url);
+            stmt.bindString(6, url);
         }
     }
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 1);
+        return cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1);
     }    
 
     @Override
     public BannerItem readEntity(Cursor cursor, int offset) {
         BannerItem entity = new BannerItem( //
             cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // desc
-            cursor.getLong(offset + 1), // id
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // imagePath
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // title
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // url
+            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1), // bid
+            cursor.getLong(offset + 2), // itmeId
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // imagePath
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // title
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // url
         );
         return entity;
     }
@@ -129,22 +142,23 @@ public class BannerItemDao extends AbstractDao<BannerItem, Long> {
     @Override
     public void readEntity(Cursor cursor, BannerItem entity, int offset) {
         entity.setDesc(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setId(cursor.getLong(offset + 1));
-        entity.setImagePath(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setTitle(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setUrl(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setBid(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setItmeId(cursor.getLong(offset + 2));
+        entity.setImagePath(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setTitle(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setUrl(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     @Override
     protected final Long updateKeyAfterInsert(BannerItem entity, long rowId) {
-        entity.setId(rowId);
+        entity.setBid(rowId);
         return rowId;
     }
     
     @Override
     public Long getKey(BannerItem entity) {
         if(entity != null) {
-            return entity.getId();
+            return entity.getBid();
         } else {
             return null;
         }
@@ -152,7 +166,7 @@ public class BannerItemDao extends AbstractDao<BannerItem, Long> {
 
     @Override
     public boolean hasKey(BannerItem entity) {
-        throw new UnsupportedOperationException("Unsupported for entities with a non-null key");
+        return entity.getBid() != null;
     }
 
     @Override

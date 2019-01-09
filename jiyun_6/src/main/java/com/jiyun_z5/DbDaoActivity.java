@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jiyun_z5.bean.BannerItem;
 import com.jiyun_z5.dao.BannerItemDao;
@@ -40,6 +41,8 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
     TextView resultTv;
     @BindView(R.id.edittext_delete)
     EditText deleteEdit;
+    @BindView(R.id.edittext_update)
+    EditText updateEdit;
 
     private static final String TAG = "DbDaoActivity";
 
@@ -59,18 +62,12 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.edittext_delete:
-//                deleteData();
-//                break;
+
             case R.id.insert:
                 insertData();
                 break;
             case R.id.delete:
-                new Thread(){
-                    public void run(){
                         deleteData();
-                    }
-                }.start();
 
                 break;
             case R.id.update:
@@ -84,16 +81,19 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
 
     public void insertData() {
 
-//        Random random = new Random(1000);//指定种子数字
-//        int index = random.nextInt(100);
+        Random random = new Random();//指定种子数字
+        int index = random.nextInt(999);
 //        double d = Math.random();
+
+        Log.d(TAG, "insertData: index="+index);
 
         DaoSession daoSession = JiyunApplication.getDaoSession();
         BannerItem bannerItem = new BannerItem();
-//        bannerItem.setId(index);
+        bannerItem.setItmeId((int)index);
         bannerItem.setImagePath(img_url);
         bannerItem.setDesc("this is description");
         bannerItem.setUrl("this is url  ");
+        bannerItem.setTitle("hehe");
         daoSession.getBannerItemDao().insert(bannerItem);
     }
 
@@ -104,6 +104,8 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
         } else {
             String id = deleteEdit.getText().toString().trim();
 
+            Log.d(TAG, "deleteData: id="+id);
+
             BannerItem bannerItem = queryDataById(id);
             daoSession.getBannerItemDao().delete(bannerItem);
         }
@@ -112,15 +114,19 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void updateData() {
+
+        String input = updateEdit.getText().toString().trim();
+
+        if (TextUtils.isEmpty(input)){
+            Toast.makeText(this, "输入itmeid", Toast.LENGTH_SHORT).show();
+        }
+
+
         DaoSession daoSession = JiyunApplication.getDaoSession();
 
-        BannerItem bannerItem = new BannerItem();
+        BannerItem bannerItem = queryDataById(input);
 
-//        bannerItem.setId(12432413);
-//        bannerItem.setImagePath(img_url);
         bannerItem.setDesc("this is update description");
-//        bannerItem.setUrl("this is url  ");
-
 
         daoSession.getBannerItemDao().update(bannerItem);
     }
@@ -140,8 +146,8 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
         String str = "";
         for (BannerItem bannerItem : bannerItemList) {
 
-            Log.d(TAG, "queryData: " + bannerItem.getId());
-            str += bannerItem.getId() + ",";
+            Log.d(TAG, "queryData: " + bannerItem.getDesc());
+            str += bannerItem.getItmeId()+ ",";
         }
 
         resultTv.setText(str);
@@ -151,7 +157,7 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
     public BannerItem queryDataById(String id) {
         DaoSession daoSession = JiyunApplication.getDaoSession();
 
-        BannerItem bannerItem = daoSession.getBannerItemDao().queryBuilder().where(BannerItemDao.Properties.Id.eq(id)).build().unique();
+        BannerItem bannerItem = daoSession.getBannerItemDao().queryBuilder().where(BannerItemDao.Properties.ItmeId.eq(id)).build().unique();
 
         return bannerItem;
 

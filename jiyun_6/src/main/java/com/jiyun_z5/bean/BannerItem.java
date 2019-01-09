@@ -3,21 +3,25 @@ package com.jiyun_z5.bean;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Property;
 
 @Entity
 public class BannerItem {
 
     private String desc;
+    @Property(nameInDb = "bid")
     @Id(autoincrement = true)
-    private long id;
+    private Long bid;
+    private long itmeId;
     private String imagePath;
     private String title;
     private String url;
-    @Generated(hash = 2052441497)
-    public BannerItem(String desc, long id, String imagePath, String title,
-            String url) {
+    @Generated(hash = 2132343279)
+    public BannerItem(String desc, Long bid, long itmeId, String imagePath,
+            String title, String url) {
         this.desc = desc;
-        this.id = id;
+        this.bid = bid;
+        this.itmeId = itmeId;
         this.imagePath = imagePath;
         this.title = title;
         this.url = url;
@@ -31,11 +35,17 @@ public class BannerItem {
     public void setDesc(String desc) {
         this.desc = desc;
     }
-    public long getId() {
-        return this.id;
+    public Long getBid() {
+        return this.bid;
     }
-    public void setId(long id) {
-        this.id = id;
+    public void setBid(Long bid) {
+        this.bid = bid;
+    }
+    public long getItmeId() {
+        return this.itmeId;
+    }
+    public void setItmeId(long itmeId) {
+        this.itmeId = itmeId;
     }
     public String getImagePath() {
         return this.imagePath;
@@ -55,6 +65,8 @@ public class BannerItem {
     public void setUrl(String url) {
         this.url = url;
     }
+
+
     
 
 }
