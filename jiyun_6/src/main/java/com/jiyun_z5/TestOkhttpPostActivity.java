@@ -1,9 +1,8 @@
 package com.jiyun_z5;
 
-import android.os.Message;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -26,8 +25,9 @@ import okio.BufferedSink;
 import static com.jiyun_z5.utils.Constant.post_url;
 
 /**
- * 请求头处理（Header）
+ * 请求头处理（Header）https://kb.cnblogs.com/page/92320/
  * 请求体处理（Form表单，String字符串，流，文件）
+ *
  */
 public class TestOkhttpPostActivity extends AppCompatActivity {
 

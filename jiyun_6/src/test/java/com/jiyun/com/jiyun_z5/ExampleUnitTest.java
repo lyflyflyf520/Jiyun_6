@@ -23,4 +23,20 @@ public class ExampleUnitTest {
 
         System.out.println("xx="+index);
     }
+
+    @Test
+    public void test(){
+
+        int a,b;
+        a=4;
+        b=5;
+        xx(a,b);
+        System.out.println("a="+a);
+    }
+    public void xx(int a,int b){
+
+        a = a*100;
+        b *= 100;
+
+    }
 }
