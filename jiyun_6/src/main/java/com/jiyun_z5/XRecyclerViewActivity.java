@@ -65,21 +65,26 @@ public class XRecyclerViewActivity extends AppCompatActivity {
                 try {
 
                     String result = (String) msg.obj;
-                    if (TextUtils.isEmpty(CacheUtils.getJSONData(Constant.home_list_url))) {
-                        CacheUtils.saveJSONData(Constant.home_list_url, result);
-                    } else {
-                        result = CacheUtils.getJSONData(Constant.home_list_url);
-                    }
                     JSONObject jsonObject = new JSONObject(result);
-                    JSONArray jsonArray = jsonObject.optJSONArray("data");
-                    for (int x = 0; x < jsonArray.length(); x++) {
-                        JSONObject obj = jsonArray.getJSONObject(x);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                    for (int x=0;x<jsonArray.length();x++){
+
                         BannerItem bannerItem = new BannerItem();
-                        bannerItem.setTitle(obj.optString("title"));
-                        bannerItem.setImagePath(obj.optString("imagePath"));
+                        JSONObject obj= jsonArray.getJSONObject(x);
+                        bannerItem.setBid(Long.valueOf(obj.getString("id")));
+                        bannerItem.setDesc(obj.getString("desc"));
+                        bannerItem.setTitle(obj.getString("title"));
+                        bannerItem.setUrl(obj.getString("url"));
+                        bannerItem.setImagePath(obj.getString("imagePath"));
+
                         bannerItemList.add(bannerItem);
+
+                        recyclerAdapter.updateData(bannerItemList);
                     }
-                    recyclerAdapter.updateData(bannerItemList);
+
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -119,7 +124,9 @@ public class XRecyclerViewActivity extends AppCompatActivity {
         xRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         recyclerAdapter = new RecyclerAdapter(this);
+
         xRecyclerView.setAdapter(recyclerAdapter);
+
         xRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -144,16 +151,23 @@ public class XRecyclerViewActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (diskLruCacheUtils.getBitmap2key(img_url) != null) {
-            imageView.setImageBitmap(diskLruCacheUtils.getBitmap2key(img_url));
-        } else {
-
-            loadImgByOkHttp();
-
-
-        }
+//        if (diskLruCacheUtils.getBitmap2key(img_url) != null) {
+//            imageView.setImageBitmap(diskLruCacheUtils.getBitmap2key(img_url));
+//        } else {
+//
+//            loadImgByOkHttp();
+//        }
 
         loadDataByOkHttp();
+
+        loadImgByHttpUrlConnection();
+        new Thread(){
+            public void run(){
+                loadStrByHttpUrlconnection();
+
+
+            }
+        }.start();
 
 
     }
@@ -173,14 +187,15 @@ public class XRecyclerViewActivity extends AppCompatActivity {
                     .build();
             Call call = okHttpClient.newCall(request);
 
-            call.enqueue(new Callback() {
+//            call.execute() // 同步
+            call.enqueue(new Callback() {  // 异步
                 @Override
                 public void onFailure(Call call, IOException e) {
 
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    String result = response.body().string();
+                    String result = response.body().string();  // 结果
 
                     Message message = Message.obtain();
                     message.obj = result;
@@ -285,7 +300,9 @@ public class XRecyclerViewActivity extends AppCompatActivity {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             InputStream inputStream = connection.getInputStream();
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream ));
+//            1.BufferedReader  主要用于缓存读取的数据
             StringBuffer sb = new StringBuffer();
             String line = null;
             while ((line = reader.readLine()) != null) {
