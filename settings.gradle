@@ -1,1 +1,2 @@
-include ':jiyun_6'
+include ':jiyun_6', ':day1'
+

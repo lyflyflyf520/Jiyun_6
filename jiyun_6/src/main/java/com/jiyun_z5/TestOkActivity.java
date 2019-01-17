@@ -25,8 +25,47 @@ public class TestOkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_ok);
 
+        Log.d(TAG, "onCreate: ");
         resultTv = (TextView) findViewById(R.id.result);
         initDataByOk();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Log.d(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: ");
     }
 
     private void initDataByOk() {
@@ -41,7 +80,7 @@ public class TestOkActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
 
-                Log.d(TAG, "onFailure: e"+e.getMessage());
+//                Log.d(TAG, "onFailure: e"+e.getMessage());
             }
 
             @Override
@@ -56,7 +95,7 @@ public class TestOkActivity extends AppCompatActivity {
                     }
                 });
 
-                Log.d(TAG, "onResponse: result="+result);
+//                Log.d(TAG, "onResponse: result="+result);
             }
         });
 
