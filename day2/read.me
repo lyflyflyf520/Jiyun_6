@@ -1,0 +1,51 @@
+Android高级-第2天-网络框架-okhttp3进阶
+请求头处理（Header）
+请求体处理（Form表单，String字符串，流，文件）
+结合实际应用接口练习使用
+接口参数拼接
+拦截器：网络拦截器，缓存拦截器，日志拦截器， 重定向拦截器（教看文档）
+HttpURLconnection及OkHttp3的对比分析
+OkHttp源码分析（设计模式，线程池的使用）
+---------------------------------------------
+需求文档：
+    实现注册功能
+接口文档：
+    接口地址：
+    参数
+    处理响应的逻辑
+
+    1.成功
+    2.失败
+        a.网络的失败  404  304
+        b.业务的失败  eg:黑名单
+
+重点：
+    post 参数
+    header
+
+
+android 7.0  File 路径问题  FileProvider使用uri
+
+
+http://yun918.cn/study/public/index.php/10.0/register/
+
+RetryAndFollowUpIntercaptors 重试和重定向拦截器
+Bridgeinterceptors 桥接拦截器
+Cacheinterceptors 缓存拦截器
+Connectinterceptors 链接拦截器
+CallserverIntercaptors 请求服务拦截器
+
+Builder 模式
+单例模式
+public class Singleton {
+    private static class SingletonHolder {
+    private static final Singleton INSTANCE = new Singleton();
+    }
+    private Singleton (){}
+    public static final Singleton getInstance() {
+    return SingletonHolder.INSTANCE;
+    }
+}
+
+
+java基础 ： https://www.jianshu.com/c/37d4a8c7ef0d

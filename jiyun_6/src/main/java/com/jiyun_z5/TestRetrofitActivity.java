@@ -96,12 +96,12 @@ public class TestRetrofitActivity extends AppCompatActivity {
 
         RetroRequestService service = retrofit.create(RetroRequestService.class);
         // 第二步
-        HashMap<String, String> keyMap = new HashMap<>();
-        keyMap.put("stage_id", "1");
-        keyMap.put("limit", "20");
-        keyMap.put("page", "1");
-//        Call<ResponseBody> call = service.getFoodList("1");
-        Call<ResponseBody> call = service.getFoodList(keyMap);
+//        HashMap<String, String> keyMap = new HashMap<>();
+//        keyMap.put("stage_id", "1");
+//        keyMap.put("limit", "20");
+//        keyMap.put("page", "1");
+        Call<ResponseBody> call = service.getFoodList("1");
+//        Call<ResponseBody> call = service.getFoodList(keyMap);
         // 第三步
         call.enqueue(new Callback<ResponseBody>() {
 

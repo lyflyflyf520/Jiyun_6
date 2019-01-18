@@ -1,5 +1,6 @@
 package com.example.day1;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("HandlerLeak")
     Handler handler= new Handler(){
         public void handleMessage(Message msg){
             if (msg.what ==99){

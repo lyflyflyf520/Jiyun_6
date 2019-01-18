@@ -187,7 +187,6 @@ public class TestOkhttpPostActivity extends AppCompatActivity {
                 public void onResponse(Call call, Response response) throws IOException {
                     final String result = response.body().string();
 
-
                     Log.d(TAG, "onResponse: " + result);
                     runOnUiThread(new Runnable() {
                         @Override
