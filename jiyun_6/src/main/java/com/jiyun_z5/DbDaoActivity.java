@@ -110,6 +110,12 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
 
     public void updateData() {
 
+        String input = updateEdit.getText().toString().trim();
+
+        if (TextUtils.isEmpty(input)) {
+            Toast.makeText(this, "输入名称", Toast.LENGTH_SHORT).show();
+            input="";
+        }
 
 
 
