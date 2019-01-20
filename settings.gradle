@@ -1,4 +1,4 @@
-include ':jiyun_6'
+include ':jiyun_6', ':day5'
 include ':day1'
 include ':day2', ':day3'
 

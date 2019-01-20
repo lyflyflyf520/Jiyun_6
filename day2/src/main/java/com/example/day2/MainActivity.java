@@ -71,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .build();
 
         Request request = new Request.Builder()// request 请求封装类
-//                .addHeader("Accept","text/plain, text/html")
+//                .addHeader("Authorization","APPCODE db33b75c89524a56ac94d6519e106a59")
+
+//                “Authorization:APPCODE db33b75c89524a56ac94d6519e106a59”
                 .post(requestBody)
                 .url(reg_url).build();
 
