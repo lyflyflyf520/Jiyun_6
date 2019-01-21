@@ -14,6 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.day5.dao.DaoMaster;
+import com.example.day5.dao.DaoSession;
+import com.example.day5.dao.UserDao;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button queryBtn;
     TextView resultTv;
     EditText deleteEdit;
-    EditText updateEdit;
 
     SQLiteDatabase db;
     private static final String TAG = "MainActivity";
@@ -41,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = new MySQLiteOpenHelper(getApplicationContext(), "mydb", null, 1).getWritableDatabase();
+
+
         initView();
 
     }
@@ -53,16 +57,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         deleteBtn = findViewById(R.id.delete);
         updateBtn = findViewById(R.id.update);
         queryBtn = findViewById(R.id.query);
+
         resultTv = findViewById(R.id.result);
         deleteEdit = findViewById(R.id.edittext_delete);
-        updateEdit = findViewById(R.id.edittext_update);
 
         insertBtn.setOnClickListener(this);
         deleteBtn.setOnClickListener(this);
         updateBtn.setOnClickListener(this);
         queryBtn.setOnClickListener(this);
     }
+    public DaoSession getDaoSession(){
+        DaoMaster.DevOpenHelper devOpenHelper = new DaoMaster.DevOpenHelper(this,"hh.db");
 
+        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDb());
+        return  daoMaster.newSession();
+    }
 
     @Override
     public void onClick(View v) {
@@ -78,51 +87,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 updateData();
                 break;
             case R.id.query:
-                queryData();
+                String input = deleteEdit.getText().toString().trim();
+                User user = queryData(input);
+
+                resultTv.setText(user.getName()+"="+user.getAge());
                 break;
         }
     }
 
 
     public void insertData() {
+        String input = deleteEdit.getText().toString().trim();
 
+        if (input == null) {
+            return;
+        }
+        User user = new User();
+        String params[] ;
+        if (input.contains(",")){
+            params = input.split(",");
+            user.setName(params[0]);
+            user.setAge(params[1]);
+        }else{
+            user.setName(input);
+        }
+      DaoSession daoSession=   getDaoSession();
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name", "rrr");
-        contentValues.put("address", "fffff");
-        //插入
-        db.insert("user", null, contentValues);
-        resultTv.setText("当前数据为：" + queryData());
+      daoSession.getUserDao().insert(user);
+
     }
 
     public void deleteData() {
-
         String input = deleteEdit.getText().toString().trim();
 
-        if (TextUtils.isEmpty(input)) {
-            Toast.makeText(this, "输入名称", Toast.LENGTH_SHORT).show();
-        }
-        //删除
-        db.delete("user", "name = ?", new String[]{input});
+        DaoSession daoSession=   getDaoSession();
 
-        resultTv.setText("当前数据为：" + queryData());
+        User user = queryData(input);
+        daoSession.getUserDao().delete(user);
     }
 
     public void updateData() {
-        String input = updateEdit.getText().toString().trim();
+        String input = deleteEdit.getText().toString().trim();
 
-        if (TextUtils.isEmpty(input)) {
-            Toast.makeText(this, "输入名称", Toast.LENGTH_SHORT).show();
-            input = "";
-        }
+        DaoSession daoSession=   getDaoSession();
+        User user = queryData(input);
 
-        //更新
-        ContentValues cv2 = new ContentValues();
-        cv2.put("name", "ddd");
-        db.update("user", cv2, "name=?", new String[]{input});
-//        Log.v("mytab","-->修改完成！");
-//        Log.v("mytab","当前数据为："+getAllData());
-        resultTv.setText("当前数据为：" + queryData());
+        user.setAge("999");
+        daoSession.getUserDao().update(user);
 
     }
 
@@ -133,19 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * queryBuilder().where(UserDao.Properties.Name.eq("")).list()：返回：List<User>列表
      * queryRaw(String where,String selectionArg)：返回：List<User>列表
      */
-    public String queryData() {
-        Cursor cursor = db.query("user", new String[]{}, "", new String[]{}, "", "", "");
+    public User queryData(String name) {
+        DaoSession daoSession=   getDaoSession();
 
-        StringBuffer stringBuffer = new StringBuffer();
-        while (cursor.moveToNext()) {
-            String myname = cursor.getString(cursor.getColumnIndex("name"));
-            String address = cursor.getString(cursor.getColumnIndex("address"));
-            stringBuffer.append("名字->" + myname + "--地址=" + address);
-        }
-
-        resultTv.setText(stringBuffer.toString());
-
-        return stringBuffer.toString();
+        List<User> list = daoSession.getUserDao().queryBuilder().where(UserDao.Properties.Name.eq(name)).list();
+        return list.size()>0? list.get(0):null;
     }
 
 

@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    >
+    android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/base_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <EditText
+        android:id="@+id/edittext_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="输入name,age" />
 
     <Button
         android:id="@+id/insert"
@@ -19,45 +18,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="插入" />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/edittext_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="输入名称,无名称默认删除全部"
-            />
-        <Button
-            android:id="@+id/delete"
+    <Button
+        android:id="@+id/delete"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="删除" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/edittext_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="原来的名称,无名称默认更新全部"
-            />
-
-        <Button
-            android:id="@+id/update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="修改" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除" />
 
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="修改" />
+
 
     <Button
         android:id="@+id/query"
