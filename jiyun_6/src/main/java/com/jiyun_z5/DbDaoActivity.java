@@ -100,12 +100,9 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
             String id = deleteEdit.getText().toString().trim();
 
             Log.d(TAG, "deleteData: id=" + id);
-
             BannerItem bannerItem = queryDataById(id);
             daoSession.getBannerItemDao().delete(bannerItem);
         }
-
-
     }
 
     public void updateData() {
@@ -116,8 +113,6 @@ public class DbDaoActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "输入名称", Toast.LENGTH_SHORT).show();
             input="";
         }
-
-
 
         DaoSession daoSession = JiyunApplication.getDaoSession();
 

@@ -58,29 +58,6 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
          Food.DataBean dataBean = dataBeans.get(position);
         holder.textView.setText(dataBean.getTitle());
 
-        /**  根据集合里的状态 ，反应到UI-checkbox**/
-        final boolean sta = status.get(position);
-        holder.checkBox.setChecked(sta);
-
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-//                false  ---->   true
-                //判断当前对象 是点击状态吗==true？
-                if (sta){
-//                    holder.checkBox.setChecked(false);
-                    status.set(position,false);// 改变集合里的状态
-                }else {
-//                    holder.checkBox.setChecked(true);
-                    status.set(position,true);// 改变集合里的状态
-                }
-                notifyDataSetChanged();
-
-            }
-        });
-
-        Glide.with(context).load(dataBean.getPic()).into(holder.img);
 
     }
 
@@ -111,6 +88,8 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             checkBox = itemView.findViewById(R.id.checkbox);
             img = itemView.findViewById(R.id.img);
             textView = itemView.findViewById(R.id.title);
+
+
 
         }
     }
