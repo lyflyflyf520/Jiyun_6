@@ -34,6 +34,7 @@ public class RxjavaTestActivity extends AppCompatActivity {
     }
 
     public void rxJavaNetTest() {
+        // 被观察者
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
