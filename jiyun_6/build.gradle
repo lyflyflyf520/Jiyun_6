@@ -18,7 +18,7 @@ android {
         }
     }
     greendao {
-        schemaVersion 1
+        schemaVersion 2
         daoPackage 'com.jiyun_z5.dao'
         targetGenDir 'src/main/java'
     }

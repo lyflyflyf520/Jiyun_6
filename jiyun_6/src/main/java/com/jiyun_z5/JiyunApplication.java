@@ -29,7 +29,6 @@ public class JiyunApplication extends Application {
     }
 
     public static DaoSession getDaoSession() {
-
         return daoSession;
     }
 }
