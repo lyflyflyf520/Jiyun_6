@@ -53,11 +53,10 @@ public class MainActivity extends AppCompatActivity {
                     public ObservableSource<SubBean> apply(Channel channel) throws Exception {
                         return Rx2AndroidNetworking.get("http://toutiao-ali.juheapi.com/toutiao/index")
                                 .addHeaders("Authorization", "APPCODE db33b75c89524a56ac94d6519e106a59")
-                                .addQueryParameter("type",channel.getChannels().get(0).getChannel())
+                                .addQueryParameter("type", channel.getChannels().get(0).getChannel())
                                 .build()
                                 .getObjectObservable(SubBean.class)
                                 ;
-
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
