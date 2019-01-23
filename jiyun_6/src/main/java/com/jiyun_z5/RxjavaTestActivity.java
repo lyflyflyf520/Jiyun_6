@@ -37,15 +37,10 @@ public class RxjavaTestActivity extends AppCompatActivity {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-
-
                 String result = getResponseByOk();
-
-
 
                 Log.d(TAG, "subscribe: result=" + result);
                 emitter.onNext(result);
-
                 emitter.onComplete();
             }
         }).subscribeOn(Schedulers.io())  //被观察者 在线程池中调用了
