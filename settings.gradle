@@ -1,4 +1,5 @@
-include ':jiyun_6', ':day5', ':LoginDemo', ':day_05', ':day_55', ':day7'
-include ':day1'
-include ':day2', ':day3'
+//include ':jiyun_6', ':day5', ':LoginDemo', ':day_05', ':day_55'
+include ':day7'
+//include ':day1'
+//include ':day2', ':day3'
 

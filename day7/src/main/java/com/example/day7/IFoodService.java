@@ -1,8 +1,11 @@
 package com.example.day7;
 
+import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Query;
 
 public interface IFoodService {
 
@@ -14,6 +17,14 @@ public interface IFoodService {
 //    public static final String  post_url ="http://yun918.cn/study/public/index.php/register/";
 //
 
+
     @GET("ios/cf/dish_list.php?stage_id=1&limit=20&page=1")
     Call<ResponseBody> getFoodList();
+
+    @GET("http://yun918.cn/study/public/index.php/newchannel")
+    Call<Channel> getTags();
+
+    @Headers("Authorization:APPCODE db33b75c89524a56ac94d6519e106a59")
+    @GET("toutiao/index")
+    Call<ResponseBody> getTagList(@Query("type") String type);
 }
