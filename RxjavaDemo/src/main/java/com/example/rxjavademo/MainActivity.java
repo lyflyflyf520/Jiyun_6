@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         rxjavaNet();
 
 
-
     }
 
     private void rxjavaNet() {
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 .map(new Func1<Integer, String>() {
                     @Override
                     public String call(Integer integer) {
-                        return integer+"";
+                        return integer + "";
                     }
                 })
                 .observeOn(Schedulers.newThread())
@@ -113,4 +112,7 @@ public class MainActivity extends AppCompatActivity {
         observable.subscribe(observer);
 
     }
+
+
+
 }
