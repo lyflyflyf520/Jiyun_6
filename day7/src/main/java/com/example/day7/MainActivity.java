@@ -17,6 +17,7 @@ import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -39,21 +40,55 @@ public class MainActivity extends AppCompatActivity {
         retrofitRxJava();
 
 
+//        initObserable();
+    }
+
+    private void initObserable(){
+        Rx2AndroidNetworking.get("http://yun918.cn/study/public/index.php/newchannel")
+                .build()
+                .getObjectObservable(Channel.class)//  返回被观察者  结果实体类型
+
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+
+                // 从一个对象 转换成另外一个对象  channel  --->  string
+                .map(new Function<Channel, String>() {
+                    @Override
+                    public String apply(Channel channel) throws Exception {
+                        return channel.getChannels().get(0).getName();// 头条
+                    }
+                })
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String channel) throws Exception {
+
+                        Log.d(TAG, "accept: channel="+channel);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                        Log.d(TAG, "accept: throwable="+throwable.getMessage());
+                    }
+                });
     }
 
     @SuppressLint("CheckResult")
     private void retrofitRxJava() {
 
+        // 处理网络请求，及返回一个被观察者
         Rx2AndroidNetworking.get("http://yun918.cn/study/public/index.php/newchannel")
                 .build()
-
                 .getObjectObservable(Channel.class)
+
+
                 .flatMap(new Function<Channel, ObservableSource<SubBean>>() {
                     @Override
                     public ObservableSource<SubBean> apply(Channel channel) throws Exception {
+
                         return Rx2AndroidNetworking.get("http://toutiao-ali.juheapi.com/toutiao/index")
                                 .addHeaders("Authorization", "APPCODE db33b75c89524a56ac94d6519e106a59")
-                                .addQueryParameter("type", channel.getChannels().get(0).getChannel())
+                                .addQueryParameter("type", channel.getChannels().get(0).getChannel())//type="top"
                                 .build()
                                 .getObjectObservable(SubBean.class)
                                 ;
