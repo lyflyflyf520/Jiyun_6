@@ -16,6 +16,8 @@ public interface IFoodService {
 //    public static final String  food_base_url="http://www.qubaobei.com";
 //    public static final String  post_url ="http://yun918.cn/study/public/index.php/register/";
 //
+    @GET("ios/cf/dish_list.php?stage_id=1&limit=20&page=1")
+    Observable<ResponseBody> getObservale();
 
 
     @GET("ios/cf/dish_list.php?stage_id=1&limit=20&page=1")

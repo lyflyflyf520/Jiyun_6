@@ -32,6 +32,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,13 +45,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        retrofitRxJava();
+//        retrofitRxJava();
 
+        testRxjavaAndRetrofit();
 
 //        initObserable();
     }
 
-    private void initObserable(){
+    private void initObserable() {
         Rx2AndroidNetworking.get("http://yun918.cn/study/public/index.php/newchannel")
                 .build()
                 .getObjectObservable(Channel.class)//  返回被观察者  结果实体类型
@@ -69,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void accept(String channel) throws Exception {
 
-                        Log.d(TAG, "accept: channel="+channel);
+                        Log.d(TAG, "accept: channel=" + channel);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
 
-                        Log.d(TAG, "accept: throwable="+throwable.getMessage());
+                        Log.d(TAG, "accept: throwable=" + throwable.getMessage());
                     }
                 });
     }
@@ -142,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Flowable 发射数据完成以后再接收  参考：https://www.heqiangfly.com/2017/10/14/open-source-rxjava-guide-flowable/
-    private void testFlowable(){
+    private void testFlowable() {
         Flowable.create(new FlowableOnSubscribe<Integer>() {
             @Override
             public void subscribe(FlowableEmitter<Integer> e) throws Exception {
@@ -176,6 +178,51 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete() {
                         System.out.println("接收----> 完成");
+                    }
+                });
+    }
+
+    // rxjava retrofit 结合
+    private void testRxjavaAndRetrofit() {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://www.qubaobei.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//
+                .build();
+        IFoodService iFoodService = retrofit.create(IFoodService.class);
+
+        Observable<ResponseBody> observable = iFoodService.getObservale();
+
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                        Log.d(TAG, "onSubscribe: ");
+                    }
+
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+
+                        try {
+                            Log.d(TAG, "onNext: responseBody"+responseBody.string());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                        Log.d(TAG, "onError: ");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                        Log.d(TAG, "onComplete: ");
                     }
                 });
     }
