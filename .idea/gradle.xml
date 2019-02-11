@@ -3,23 +3,18 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <compositeConfiguration>
-          <compositeBuild compositeDefinitionSource="SCRIPT" />
-        </compositeConfiguration>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/LoginDemo" />
+            <option value="$PROJECT_DIR$/MvpDemo" />
+            <option value="$PROJECT_DIR$/Mvp_1" />
             <option value="$PROJECT_DIR$/day1" />
             <option value="$PROJECT_DIR$/day2" />
             <option value="$PROJECT_DIR$/day3" />
             <option value="$PROJECT_DIR$/day5" />
             <option value="$PROJECT_DIR$/day7" />
-            <option value="$PROJECT_DIR$/day_05" />
-            <option value="$PROJECT_DIR$/day_55" />
-            <option value="$PROJECT_DIR$/jiyun_6" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
