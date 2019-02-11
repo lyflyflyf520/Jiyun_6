@@ -9,11 +9,11 @@ post  参数（String username,String password,String phone,String verify）
 post 参数（String username,String password） 注：username可以是注册的用户名或手机号
 
 
-    public static String img_url ="http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png";
-    public static String home_list_url ="http://www.wanandroid.com/banner/json";
-    public static final String  food_url="http://www.qubaobei.com/ios/cf/dish_list.php?stage_id=1&limit=20&page=1";
-    public static final String  food_base_url="http://www.qubaobei.com";
-    public static final String  post_url ="http://yun918.cn/study/public/index.php/register/";
+   String img_url ="http://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png";
+   home_list_url ="http://www.wanandroid.com/banner/json";
+   food_url="http://www.qubaobei.com/ios/cf/dish_list.php?stage_id=1&limit=20&page=1";
+   food_base_url="http://www.qubaobei.com";
+   post_url ="http://yun918.cn/study/public/index.php/register/";
 
 
 
