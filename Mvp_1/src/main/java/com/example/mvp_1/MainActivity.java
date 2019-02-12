@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button click;
     private TextView resultTv;
 
-    IUpdateUIContract.Presenter presenter;
+    private IUpdateUIContract.Presenter presenter;
     private static final String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

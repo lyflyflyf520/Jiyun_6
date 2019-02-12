@@ -7,7 +7,8 @@ import java.util.Random;
 public class IUpdateUIModel implements IUpdateUIContract.Model {
 
     IUpdateUIContract.View iview;
-    public IUpdateUIModel( IUpdateUIContract.View iview) {
+
+    public IUpdateUIModel(IUpdateUIContract.View iview) {
         this.iview = iview;
     }
 
@@ -16,10 +17,10 @@ public class IUpdateUIModel implements IUpdateUIContract.Model {
         Random random = new Random();
         int result = random.nextInt(100);
 
-        if (result%2==0){
-            iview.updateUISuccess(result+"");
-        }else{
-            iview.updateUIFailed(result+"");
+        if (result % 2 == 0) {
+            iview.updateUISuccess(result + "");
+        } else {
+            iview.updateUIFailed(result + "");
         }
 
     }

@@ -1,9 +1,9 @@
-package com.example.mvpdemo.model;
+package com.example.loginmvp.model;
 
 import android.util.Log;
 
-import com.example.mvpdemo.contract.LoginContract;
-import com.example.mvpdemo.service.LoginService;
+import com.example.loginmvp.LoginService;
+import com.example.loginmvp.contract.LoginContract;
 
 import java.io.IOException;
 
@@ -19,24 +19,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginModel implements LoginContract.Model {
 
-    private LoginContract.View iView;
+    private static final String TAG = "LoginModel";
+    public static String loginUrl ="http://yun918.cn";
+
+    LoginContract.View iView;
 
     public LoginModel(LoginContract.View iView) {
         this.iView = iView;
     }
 
-    private static final String TAG = "LoginModel";
     @Override
-    public void loginData(String u,String psw) {
+    public void loginData() {
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(LoginService.loginUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(loginUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        LoginService loginService = retrofit.create(LoginService.class);
+        LoginService loginService =retrofit.create(LoginService.class);
 
-        Observable<ResponseBody> observable = loginService.getLogin(u,psw);
+        Observable<ResponseBody>  observable = loginService.getLogin("111","111");
 
         observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,19 +52,21 @@ public class LoginModel implements LoginContract.Model {
                     @Override
                     public void onNext(ResponseBody value) {
 
+                        Log.d(TAG, "onNext: ");
 
                         try {
-                            iView.updateUI(value.string());
+                            iView.loginJump(value.string());
+
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        Log.d(TAG, "onNext: ");
                     }
 
                     @Override
                     public void onError(Throwable e) {
 
-                        iView.faildUI(e.getMessage());
+                        iView.loginError(e.getMessage());
                         Log.d(TAG, "onError: ");
                     }
 
