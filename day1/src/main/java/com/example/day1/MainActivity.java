@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         Call call = okHttpClient.newCall(request);
 
+
         call.enqueue(new Callback() {  // 调取异步方法，获取数据
             @Override
             public void onFailure(Call call, IOException e) {

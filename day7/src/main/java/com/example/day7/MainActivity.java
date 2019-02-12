@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
 
 //        retrofitRxJava();
 
-        testRxjavaAndRetrofit();
-
+//        testRxjavaAndRetrofit();
+        testRxjavaRetrofit();
 //        initObserable();
     }
 
@@ -122,26 +122,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * 获取网络数据，通过同步形式
-     *
-     * @return
-     */
-    private Response<ResponseBody> initRetrofit() {
-        Response<ResponseBody> response = null;
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.qubaobei.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        IFoodService iFoodService = retrofit.create(IFoodService.class);
-        Call<ResponseBody> call = iFoodService.getFoodList();
-        try {
-            response = call.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return response;
-    }
 
     //Flowable 发射数据完成以后再接收  参考：https://www.heqiangfly.com/2017/10/14/open-source-rxjava-guide-flowable/
     private void testFlowable() {
@@ -182,20 +162,24 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    // rxjava retrofit 结合
-    private void testRxjavaAndRetrofit() {
+
+    /**
+     * rxjava retrofit 结合使用
+     */
+    public void testRxjavaRetrofit() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.qubaobei.com/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
+
         IFoodService iFoodService = retrofit.create(IFoodService.class);
 
         Observable<ResponseBody> observable = iFoodService.getObservale();
 
-        observable.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
+        observable.subscribeOn(Schedulers.io())//  在子线程订阅事件
+                .observeOn(AndroidSchedulers.mainThread()) // 切换到主线程更新UI
                 .subscribe(new Observer<ResponseBody>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -207,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onNext(ResponseBody responseBody) {
 
                         try {
-                            Log.d(TAG, "onNext: responseBody"+responseBody.string());
-                        } catch (Exception e) {
+                            Log.d(TAG, "onNext: "+responseBody.string());
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -216,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
 
-                        Log.d(TAG, "onError: ");
+                        Log.d(TAG, "onError: "+e.getMessage());
                     }
 
                     @Override
@@ -225,5 +209,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "onComplete: ");
                     }
                 });
+
     }
 }
