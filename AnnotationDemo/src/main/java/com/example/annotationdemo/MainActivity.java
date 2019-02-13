@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "btnClick: ");
     }
 
-    @LongClick
+    @LongClick(R.id.click)
     public void OnLongClick(){
         resultTv.setText("fffffffffffff");
         Log.d(TAG, "OnLongClick: ");
