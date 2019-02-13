@@ -5,6 +5,8 @@ import com.example.day8.contract.IUpdateListenerContract;
 import java.util.Random;
 
 public class IUpdateListenerModel implements IUpdateListenerContract.Model {
+
+
     IUpdateListenerContract.View iView;
     public IUpdateListenerModel( IUpdateListenerContract.View iView) {
         this.iView = iView;
