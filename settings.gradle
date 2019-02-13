@@ -12,6 +12,6 @@
 //include  ':LoginMvp'
 //include ':MvpDemo'
 //include ':Mvp_34'
-include ':day9', ':MvpDbDemo'
-include ':AnnotationDemo'
+//include ':day9', ':MvpDbDemo'
+include ':AnnotationDemo', ':EventBusDemo'
 
