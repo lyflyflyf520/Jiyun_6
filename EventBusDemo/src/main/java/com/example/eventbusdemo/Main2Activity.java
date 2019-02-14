@@ -29,7 +29,7 @@ public class Main2Activity extends AppCompatActivity {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onMsgEvent(MsgEvent msgEvent) {
-        textView.setText("这是一个粘性事件");
+        textView.setText(msgEvent.getMsg());
     }
 
     @Override

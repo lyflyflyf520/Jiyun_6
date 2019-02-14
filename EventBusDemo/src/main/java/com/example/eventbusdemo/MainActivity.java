@@ -29,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ButterKnife.bind(this);
+        ButterKnife.bind(this);// 绑定当前context-activity、service、application
+
+
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -37,22 +39,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: ");
 
-//                EventBus.getDefault().post(new MsgEvent());
-                EventBus.getDefault().postSticky(new MsgEvent());
+//                EventBus.getDefault().post(new MsgEvent("333"));
+                EventBus.getDefault().postSticky(new MsgEvent("123-456"));
 
                 startActivity(new Intent(MainActivity.this,Main2Activity.class));
             }
         });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN) // 声明eventbus 接受订阅的事件，发生在主线程
     public void onMessageEvent(MsgEvent event){
 
-        result.setText("333");
 
-        EventBus.getDefault().postSticky(new MsgEvent());
+        result.setText(event.getMsg());
 
-        startActivity(new Intent(MainActivity.this,Main2Activity.class));
+//        EventBus.getDefault().postSticky(new MsgEvent());
+//
+//        startActivity(new Intent(MainActivity.this,Main2Activity.class));
     }
 
     @Override
