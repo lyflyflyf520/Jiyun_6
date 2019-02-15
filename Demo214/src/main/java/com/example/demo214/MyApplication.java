@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.demo214.dao.DaoMaster;
 import com.example.demo214.dao.DaoSession;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 public class MyApplication extends Application {
     static DaoSession daoSession;
@@ -12,6 +13,8 @@ public class MyApplication extends Application {
         super.onCreate();
 
         initDb();
+
+        Fresco.initialize(this);
     }
 
     public void initDb() {

@@ -9,11 +9,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Demo214" />
+            <option value="$PROJECT_DIR$/FrescoDemo" />
             <option value="$PROJECT_DIR$/GlideDemo" />
             <option value="$PROJECT_DIR$/day10_AndroidAnnotaions" />
             <option value="$PROJECT_DIR$/day10_ButterKnife" />
-            <option value="$PROJECT_DIR$/day10_eventbus" />
-            <option value="$PROJECT_DIR$/day9" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
