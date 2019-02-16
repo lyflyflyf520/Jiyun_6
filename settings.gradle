@@ -22,5 +22,5 @@
 //include ':day10_AndroidAnnotaions'
 //include ':day10_ButterKnife'
 //include ':GlideDemo'
-include ':UploadFile'
+include ':UploadFile', ':UploadFile_retrofit'
 
