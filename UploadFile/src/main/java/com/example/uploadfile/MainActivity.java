@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "exists: " + true);
         }
         // 创建文件上传请求对象
-        RequestBody fileBody = RequestBody.create(MediaType.parse("application/octet-stream"), file);
+        RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
 
         // 构建okhttpclient 对象
         OkHttpClient okHttpClient = new OkHttpClient();
