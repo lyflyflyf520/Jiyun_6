@@ -100,37 +100,21 @@ public class HttpUtils {
     private static final String TAG = "HttpUtils";
 
     /**
-     * 2
      * HttpUrlConnection　实现文件上传
-     * 3
-     * <p>
-     * 4
-     *
      * @param params       普通参数
-     *                     5
      * @param fileFormName 文件在表单中的键
-     *                     6
      * @param uploadFile   上传的文件
-     *                     7
      * @param newFileName  文件在表单中的值（服务端获取到的文件名）
-     *                     8
      * @param urlStr       url
-     *                     9
      * @throws IOException 10
      */
 
     public static void uploadForm(Map<String, String> params, String fileFormName, File uploadFile, String newFileName, String urlStr) throws IOException {
 
-
         if (newFileName == null || newFileName.trim().equals("")) {
-
             newFileName = uploadFile.getName();
-
         }
         StringBuilder sb = new StringBuilder();
-        /**
-         * 普通的表单数据
-         */
         if (params != null) {
             for (String key : params.keySet()) {
                 sb.append("Content-Disposition: form-data; name=\"" + key + "\"" + "\r\n");
@@ -138,11 +122,7 @@ public class HttpUtils {
                 sb.append(params.get(key) + "\r\n");
             }
         }
-        /**
-         30
-         * 上传文件的头
-         31
-         */
+
         sb.append("--" + BOUNDARY + "\r\n");
         sb.append("Content-Disposition: form-data; name=\"" + fileFormName + "\"; filename=\"" + newFileName + "\""
                 + "\r\n");
