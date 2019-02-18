@@ -14,7 +14,7 @@
 //include ':Mvp_34'
 //include ':Mvp_1'
 //include ':day9'
-//include ':Demo214', ':FrescoDemo'
+//include ':Demo214'
 //include ':MvpDbDemo'
 //include ':AnnotationDemo'
 //include ':EventBusDemo'
@@ -22,6 +22,8 @@
 //include ':day10_AndroidAnnotaions'
 //include ':day10_ButterKnife'
 //include ':GlideDemo'
-include ':day12', ':day12_uploadfile', ':day12_retrofit_uploadfile'
+//include ':day12'
+include ':day12_uploadfile', ':MoreThreadUploadFile'
+//include ':day12_retrofit_uploadfile'
 //include ':UploadFile', ':UploadFile_retrofit'
 
