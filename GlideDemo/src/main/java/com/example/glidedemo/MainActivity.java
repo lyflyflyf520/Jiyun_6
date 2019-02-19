@@ -6,31 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
-/**
- *  要掌握的：
-     *  普通使用
-     *  缓存策略
-     *  圆形
-     *  圆角
-     *  监听器 Listener
-     *  错误图片 error
-     *  加载中图片 placeHolder
-     *  图片展示样式image scaleType 如:centerCrop fitcenter
- *      Bitmap config ARGB_8888
- *
- *
- *
- *
- *
- */
 public class MainActivity extends AppCompatActivity {
 
     /**
