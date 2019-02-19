@@ -3,6 +3,7 @@ package com.example.morethreadloadfile;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
 
@@ -21,7 +22,7 @@ public class DownLoadUtils {
     //默认下载文件保存路径
     private final String DEFAULT_TARGET_FOLDER_PATH = Environment.getExternalStorageDirectory() + File.separator;
     //下载文件保存的目标路径（包括文件名）
-    private String targetFilePathAndName;
+    private static String targetFilePathAndName;
     //最大可开启的线程数
     public static final int MAX_THREAD_NUMBER = 15;
     //下载文件的URL地址
@@ -96,21 +97,25 @@ public class DownLoadUtils {
     }
 
 
-    /**
-     * android N 执行此安装方法
-     *
 
-     */
-    public void installAPK() {
-        // 获取下载好的 apk 路径
-        Intent intentN = new Intent(Intent.ACTION_VIEW);
-        // 由于没有在Activity环境下启动Activity,设置下面的标签
-        intentN.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
-        Uri apkUri = FileProvider.getUriForFile(context, "world.letsgo.booster.android.FileProvider", new File(targetFilePathAndName));
-        //添加这一句表示对目标应用临时授权该Uri所代表的文件
-        intentN.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intentN.setDataAndType(apkUri, "application/vnd.android.package-archive");
-        context.startActivity(intentN);
+    //普通安装
+    public static void installAPK( ) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        //版本在7.0以上是不能直接通过uri访问的
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+            File file = new File(targetFilePathAndName);
+            // 由于没有在Activity环境下启动Activity,设置下面的标签
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+            Uri apkUri = FileProvider.getUriForFile(context, "com.example.morethreadloadfile", file);
+            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(new File(targetFilePathAndName)),
+                    "application/vnd.android.package-archive");
+        }
+        context.startActivity(intent);
     }
+
 }

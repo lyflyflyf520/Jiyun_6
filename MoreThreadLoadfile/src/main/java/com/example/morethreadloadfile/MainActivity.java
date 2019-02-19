@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
+import static android.Manifest.permission.WRITE_SECURE_SETTINGS;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          */
         if (Build.VERSION.SDK_INT >= 23) {
             int REQUEST_CODE_CONTACT = 101;
-            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,WRITE_SECURE_SETTINGS};
             //验证是否许可权限
             for (String str : permissions) {
                 if (this.checkSelfPermission(str) != PackageManager.PERMISSION_GRANTED) {
