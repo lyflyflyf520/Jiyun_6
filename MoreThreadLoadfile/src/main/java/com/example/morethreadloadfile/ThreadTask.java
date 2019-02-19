@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static com.example.morethreadloadfile.DownLoadUtils.restTask;
+
 public class ThreadTask implements Runnable {
 
     private int partSize;
@@ -57,9 +59,9 @@ public class ThreadTask implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            DownLoadUtils.restTask--;
-//            if (restTask == 0)
-//                downloadFinish.onComplete(new File(targetFilePathAndName));
+            restTask--;
+            if (restTask == 0)
+                Log.d(TAG, "doHttpTask: 下载完成");
 
         }
 
