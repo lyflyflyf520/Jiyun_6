@@ -1,7 +1,12 @@
 package com.example.morethreadloadfile;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -60,8 +65,10 @@ public class ThreadTask implements Runnable {
             e.printStackTrace();
         } finally {
             restTask--;
-            if (restTask == 0)
+            if (restTask == 0){
+                new DownLoadUtils().installAPK();
                 Log.d(TAG, "doHttpTask: 下载完成");
+            }
 
         }
 

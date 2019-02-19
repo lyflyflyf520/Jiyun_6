@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 DownLoadUtils downLoadUtils = new DownLoadUtils();
                 try {
-                    downLoadUtils.start(apk_url,null,3,"UnknowApp-1.0.apk");
+                    downLoadUtils.start(MainActivity.this,apk_url,null,3,"UnknowApp-1.0.apk");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

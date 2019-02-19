@@ -1,6 +1,10 @@
 package com.example.morethreadloadfile;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +37,7 @@ public class DownLoadUtils {
     private int fileSize;
     //每个线程负责下载的文件块大小
     private int partSize;
+    static Context context;
     /**
      * 开始一次下载
      * @param sourcePath 目标URL
@@ -41,8 +46,9 @@ public class DownLoadUtils {
      * @param fileName 保存的文件名
      * @return 开启任务成功否
      */
-    public boolean start(  String sourcePath,  String targetFilePath, int threadNumber,   String fileName) throws IOException {
+    public boolean start( Context context, String sourcePath,  String targetFilePath, int threadNumber,   String fileName) throws IOException {
         this.sourcePath = sourcePath;
+        this.context = context;
         this.targetFilePathAndName = targetFilePath == null ? DEFAULT_TARGET_FOLDER_PATH
                 + (fileName == null ? System.currentTimeMillis() : fileName) :
                 targetFilePath + (fileName == null ? System.currentTimeMillis() : fileName);
@@ -87,5 +93,24 @@ public class DownLoadUtils {
         conn.setRequestProperty("Connection", "Keep-Alive");
 //        conn.connect();
         return conn;
+    }
+
+
+    /**
+     * android N 执行此安装方法
+     *
+
+     */
+    public void installAPK() {
+        // 获取下载好的 apk 路径
+        Intent intentN = new Intent(Intent.ACTION_VIEW);
+        // 由于没有在Activity环境下启动Activity,设置下面的标签
+        intentN.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //参数1 上下文, 参数2 Provider主机地址 和配置文件中保持一致   参数3  共享的文件
+        Uri apkUri = FileProvider.getUriForFile(context, "world.letsgo.booster.android.FileProvider", new File(targetFilePathAndName));
+        //添加这一句表示对目标应用临时授权该Uri所代表的文件
+        intentN.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intentN.setDataAndType(apkUri, "application/vnd.android.package-archive");
+        context.startActivity(intentN);
     }
 }
