@@ -23,7 +23,9 @@
 //include ':day10_ButterKnife'
 //include ':GlideDemo'
 //include ':day12'
-include ':day12_uploadfile', ':MoreThreadUploadFile'
+//include ':day12_uploadfile', ':MoreThreadUploadFile'
 //include ':day12_retrofit_uploadfile'
 //include ':UploadFile', ':UploadFile_retrofit'
+//include ':day13'
+include ':day13_user_icon', ':day13_upload_video'
 
