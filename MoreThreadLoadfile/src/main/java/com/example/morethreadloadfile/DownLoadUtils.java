@@ -33,7 +33,6 @@ public class DownLoadUtils {
 
     //还在下载的线程数量
     public static int restTask;
-    private ThreadTask[] threads;
     //下载文件总大小
     private int fileSize;
     //每个线程负责下载的文件块大小
@@ -55,16 +54,11 @@ public class DownLoadUtils {
                 targetFilePath + (fileName == null ? System.currentTimeMillis() : fileName);
         this.threadNumber = threadNumber < 0 || threadNumber > MAX_THREAD_NUMBER ? this.threadNumber : threadNumber;
         this.restTask = this.threadNumber;
-        threads = new ThreadTask[this.threadNumber];
+
 
         HttpURLConnection conn = getConnection();
         fileSize = conn.getContentLength();
         conn.disconnect();
-
-//        if (fileSize <= 0) {
-//            downloadFinish.onComplete(null);
-//            return false;
-//        }
 
         RandomAccessFile file = new RandomAccessFile(targetFilePathAndName, "rw");
         file.setLength(fileSize);
@@ -84,7 +78,7 @@ public class DownLoadUtils {
     public static HttpURLConnection getConnection() throws IOException {
         URL url = new URL(DownLoadUtils.sourcePath);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setConnectTimeout(5*1000);
+        conn.setConnectTimeout(10*1000);
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "image/gif, image/jpeg, image/pjpeg, image/pjpeg, application/x-shockwave-flash, application/xaml+xml, application/vnd.ms-xpsdocument, application/x-ms-xbap, application/x-ms-application, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*");
         conn.setRequestProperty("Accept-Language", "zh-CN");
@@ -101,6 +95,7 @@ public class DownLoadUtils {
     //普通安装
     public static void installAPK( ) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         //版本在7.0以上是不能直接通过uri访问的
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
             File file = new File(targetFilePathAndName);

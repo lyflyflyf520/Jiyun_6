@@ -47,7 +47,7 @@ public class ThreadTask implements Runnable {
             HttpURLConnection connection = DownLoadUtils.getConnection();
             InputStream in = connection.getInputStream();
             skipFully(in, startPos);
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[8*1024];
             int hasRead;
             while ((currentDownLoaded < partSize) && (hasRead = in.read(bytes)) > 0) {
                 currentPart.write(bytes, 0, hasRead);
