@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -28,6 +29,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Source;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -92,13 +97,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void uploadFile() {
 
         // 1.获取文件
-        String filePath = Environment.getExternalStorageDirectory() + File.separator + "aa.jpg";
-        File file = new File(filePath);
+        String filePath = Environment.getExternalStorageDirectory() + File.separator + "55.jpg";
+        final File file = new File(filePath);
         if (file.exists()) {
             Log.d(TAG, "exists: " + true);
         }
         // 2.创建文件上传请求对象
-        RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
+//        RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
+
+        RequestBody fileBody = new RequestBody() {
+            @Override
+            public MediaType contentType() {
+                return MediaType.parse("image/jpg");
+            }
+
+            @Override
+            public void writeTo(BufferedSink sink) throws IOException {
+                Source source;
+                try {
+                    source = Okio.source(file);
+                    //sink.writeAll(source);
+                    Buffer buf = new Buffer();
+                    long remaining = contentLength();
+                    long isReadSize = 0;
+                    DecimalFormat decimalFormat = new DecimalFormat("##.00%");
+                    for (long readCount; (readCount = source.read(buf, 1024)) != -1; ) {
+                        sink.write(buf, readCount);
+                        isReadSize+= readCount;
+                        int progress = (int) ((100 * isReadSize) / remaining);
+//                        listener.onProgress(contentLength(), remaining -= readCount, remaining == 0);
+                        Log.d(TAG, "writeTo: =="+progress);
+
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public long contentLength() throws IOException {
+                return file.length();
+            }
+        };
 
 //        3.new okHttp
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -108,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setType(MultipartBody.FORM)  // 表单类型
                 .addFormDataPart("key", "img")  // 文件上传的参数
                 .addFormDataPart("file", file.getName(), fileBody)
+
                 .build();
 
         //5. 创建request对象
