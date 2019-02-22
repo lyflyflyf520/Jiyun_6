@@ -1,9 +1,12 @@
 package com.example.monthdemo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -16,6 +19,7 @@ import com.example.monthdemo.presenter.UpdatePresenterImpl;
 import com.example.monthdemo.view.IView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements IView {
 
@@ -97,6 +101,22 @@ public class MainActivity extends AppCompatActivity implements IView {
             }
         });
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+
+        List<Fragment> fragments = supportFragmentManager.getFragments();
+        for (Fragment fragment :fragments){
+            if (fragment instanceof OwnerFragment ){
+
+                ((OwnerFragment)fragment).onActivityResult(requestCode, resultCode, data);
+            }
+        }
 
     }
 }
