@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.monthdemo.R;
-import com.example.monthdemo.TagBean;
+import com.example.monthdemo.bean.TagBean;
 import com.example.monthdemo.adapter.FmPagerAdapter;
 import com.example.monthdemo.service.HomeService;
 import com.example.monthdemo.uitls.Contants;
@@ -20,9 +20,7 @@ import com.example.monthdemo.uitls.Contants;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -102,8 +100,6 @@ public class HomeFragment extends Fragment {
 
     private void initTablayout(List<TagBean.ChannelsBean> channels) {
 
-        mTablayout.setupWithViewPager(mViewpager);
-
         for (int x = 0; x < channels.size(); x++) {
 
             TagBean.ChannelsBean channelsBean = channels.get(x);
@@ -119,6 +115,22 @@ public class HomeFragment extends Fragment {
 
         FmPagerAdapter fmPagerAdapter = new FmPagerAdapter(getChildFragmentManager(), fragments);
         mViewpager.setAdapter(fmPagerAdapter);
+
+        mTablayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewpager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        mViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTablayout));
 
 
     }

@@ -66,16 +66,37 @@ public class MainActivity extends AppCompatActivity implements IView {
 
 
         fragments.add(new HomeFragment());
-        fragments.add(new OwnerFragment());
         fragments.add(new MallFragment());
-        tabLayout.setupWithViewPager(viewPager);
+        fragments.add(new OwnerFragment());
+
         for(int i=0;i<titles.length;i++){
-            tabLayout.addTab(tabLayout.newTab().setText(titles[i]));
+            if (i==0){
+                tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.home).setText(titles[i]));
+            }else if(i==1){
+                tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.mall).setText(titles[i]));
+            }else if(i==2){
+                tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.owner).setText(titles[i]));
+            }
+
         }
+        tabLayout.getTabAt(0).select();
 
         pagerAdapter = new FmPagerAdapter(getSupportFragmentManager(),fragments);
         viewPager.setAdapter(pagerAdapter);
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
     }
 }

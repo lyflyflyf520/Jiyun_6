@@ -4,19 +4,26 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
-import com.example.monthdemo.ItemBean;
 import com.example.monthdemo.R;
+import com.example.monthdemo.bean.WarBean;
 import com.example.monthdemo.adapter.RecyclerViewAdapter;
 import com.example.monthdemo.service.HomeService;
 import com.example.monthdemo.uitls.Contants;
+import com.google.gson.Gson;
 
-import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,28 +42,28 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ItemFragment extends Fragment {
 
 
-    @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
     private boolean isCreated;
     private boolean isVisible;
     private static final String TAG = "ItemFragment";
     private String channel;
     private View view;
-
+    private ProgressBar progressBar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.item_fragment, null);
-
-        Bundle arguments = getArguments();
-
-        channel = arguments.getString("channel");
+        mRecyclerView = root.findViewById(R.id.recyclerView);
+        progressBar = root.findViewById(R.id.progressbar);
 
         isCreated = true;
 
-        ButterKnife.bind(this, root);
+        Bundle arguments = getArguments();
+
+
         initData();
+
         return root;
     }
 
@@ -68,33 +75,38 @@ public class ItemFragment extends Fragment {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         HomeService homeService = retrofit.create(HomeService.class);
-        Observable<ItemBean> observable = homeService.getTagList(channel);
+        Observable<ResponseBody> observable = homeService.getTagList();
         observable.subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ItemBean>() {
+                .subscribe(new Observer<ResponseBody>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Log.d(TAG, "onSubscribe: ");
+                        progressBar.setVisibility(View.VISIBLE);
+                        Log.d(TAG, "onSubscribe: "+Thread.currentThread().getName());
                     }
 
                     @Override
-                    public void onNext(ItemBean value) {
-
-
+                    public void onNext(ResponseBody value) {
                         try {
-//                            Log.d(TAG, "onNext: " + value.string());
-
-                            setData2ListView(value.getResult().getData());
+                            JSONObject jsonObject = new JSONObject(value.string());
+                            JSONArray jsonArray = jsonObject.getJSONArray("T1348648141035");
+                            List<WarBean> warBeans = new ArrayList<>();
+                            for (int x=0;x<jsonArray.length();x++){
+                                JSONObject obj = jsonArray.getJSONObject(x);
+                                WarBean warBean = new Gson().fromJson(obj.toString(),WarBean.class);
+                                warBeans.add(warBean);
+                            }
+                            progressBar.setVisibility(View.GONE);
+                            Log.d(TAG, "onNext: warBeans=" + warBeans.size());
+                            setData2ListView(warBeans);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-
-
                     @Override
                     public void onError(Throwable e) {
-
-                        Log.d(TAG, "onError: ");
+                        progressBar.setVisibility(View.GONE);
+                        Log.d(TAG, "onError: "+e.getMessage());
                     }
 
                     @Override
@@ -105,26 +117,28 @@ public class ItemFragment extends Fragment {
 
     }
 
-    private void setData2ListView(List<ItemBean.ResultBean.DataBean> data) {
+    private void setData2ListView(List<WarBean> data) {
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getActivity());
         mRecyclerView.setAdapter(recyclerViewAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
         recyclerViewAdapter.updateDate(data);
     }
 
+    /**
+     * 是否可见
+     * @param isVisibleToUser
+     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
-    }
+        if (isVisibleToUser){  // 可见 同时 有数据
+            // 加载数据
+            // 展示列表
 
-
-    @OnClick(R.id.recyclerView)
-    public void onClick(View v) {
-        switch (v.getId()) {
-            default:
-                break;
-            case R.id.recyclerView:
-                break;
         }
     }
+
+
 }

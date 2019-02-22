@@ -1,4 +1,4 @@
-package com.example.monthdemo;
+package com.example.monthdemo.bean;
 
 import java.util.List;
 
