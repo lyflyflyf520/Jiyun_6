@@ -24,12 +24,14 @@ import com.example.monthdemo.view.DialogFromBottom;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class OwnerFragment extends Fragment implements View.OnClickListener {
-    private final int PHOTO_REQUEST_CAMERA=99;
-    private final  int PHOTO_REQUEST_GALLERY=111;
+    private final int PHOTO_REQUEST_CAMERA = 99;
+    private final int PHOTO_REQUEST_GALLERY = 111;
     private static Uri mCutTempFile;
-    private final int PHOTO_REQUEST_CUT=121;
+    private final int PHOTO_REQUEST_CUT = 121;
     private static File mCameraTempFile;
     private View view;
     private ImageView mUserImg;
@@ -66,7 +68,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
         return inflate;
     }
 
-    public void selectImg(){
+    public void selectImg() {
         dialogFromBottom.show();
     }
 
@@ -78,35 +80,37 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 if (data != null)
                     openCropActivity(getActivity(), data.getData());
                 break;
-            case  PHOTO_REQUEST_CAMERA:
-                File cameraTempFile =  getCameraTempFile();
-                if (cameraTempFile != null){
-                    Uri photoURI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName(),mCameraTempFile);
+            case PHOTO_REQUEST_CAMERA:
+                File cameraTempFile = getCameraTempFile();
+                if (cameraTempFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName(), mCameraTempFile);
 
                     openCropActivity(getActivity(), photoURI);
                 }
 
                 break;
-            case  PHOTO_REQUEST_CUT:
+            case PHOTO_REQUEST_CUT:
                 mUserImg.setImageBitmap(getAfterCropBitmap(getActivity()));
                 break;
         }
     }
-    public static Bitmap getAfterCropBitmap(Activity activity){
-        File cameraTempFile2= getCameraTempFile();
-        if (cameraTempFile2 != null) {
-            cameraTempFile2.delete();
-        }
 
-        Uri mCutTempFile= getCutTempFile();
-        Bitmap bitmap;
+    public static Bitmap getAfterCropBitmap(Activity activity) {
+
+        Uri mCutTempFile = getCutTempFile();
+        Bitmap bitmap = null;
         try {
-            bitmap = BitmapFactory.decodeStream(activity.getContentResolver().openInputStream(mCutTempFile));
-        } catch (FileNotFoundException e) {
+
+            InputStream stream = activity.getContentResolver().openInputStream(mCutTempFile);
+
+            bitmap = BitmapFactory.decodeStream(stream, null, null);
+            stream.close();
+        } catch (Exception e) {
             return null;
         }
         return bitmap;
     }
+
     public static File getCameraTempFile() {
         return mCameraTempFile;
     }
@@ -115,12 +119,12 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
         return mCutTempFile;
     }
 
-    public void uploadFile(){
+    public void uploadFile() {
 
 
     }
 
-    public void login(){
+    public void login() {
 
 
     }
@@ -158,10 +162,17 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     /*
      * 剪切图片
      */
-    public  void openCropActivity(Activity activity,Uri uri) {
+    public void openCropActivity(Activity activity, Uri uri) {
 
-        File file  = new File(Environment.getExternalStorageDirectory().getPath() + File.separator+ "Crop.jpg");
-        mCutTempFile = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName(),file);
+        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "Crop.jpg");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        mCutTempFile = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName(), file);
 
 
         Intent intent = new Intent("com.android.camera.action.CROP");
@@ -179,9 +190,9 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     /*
      * 从相机获取
      */
-    public  void openCamera(Activity activity) {
-        mCameraTempFile = new File(Environment.getExternalStorageDirectory()+File.separator+"xxx.png");
-        Uri photoURI = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName(),mCameraTempFile);
+    public void openCamera(Activity activity) {
+        mCameraTempFile = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
+        Uri photoURI = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName(), mCameraTempFile);
 
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -191,7 +202,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     /*
      * 从相册获取
      */
-    public  void openGallery(Activity activity) {
+    public void openGallery(Activity activity) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         activity.startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
