@@ -15,6 +15,12 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 管理多线程的下载
+ *  1.获取下载的文件大小--去服务器读取  10MB
+ *  2.获取文件大小后，根据线程的数量来分割 每个线程下载应该下载的文件大小(startpos--endpos)
+ *  3.最终每个线程去下载各自的文件片段
+ */
 public class DownLoadUtils {
 
 
@@ -55,20 +61,26 @@ public class DownLoadUtils {
         this.threadNumber = threadNumber < 0 || threadNumber > MAX_THREAD_NUMBER ? this.threadNumber : threadNumber;
         this.restTask = this.threadNumber;
 
-
+        // 1.获取下载的文件大小--去服务器读取  10MB
+        // 2.获取文件大小后，根据线程的数量来分割 每个线程下载应该下载的文件大小(startpos--endpos)
+        // 3.最终每个线程去下载各自的文件片段
+//        4.启动多个线程 去真实下载文件
         HttpURLConnection conn = getConnection();
         fileSize = conn.getContentLength();
         conn.disconnect();
 
+        // 创建本地 下载的文件
         RandomAccessFile file = new RandomAccessFile(targetFilePathAndName, "rw");
-        file.setLength(fileSize);
+        file.setLength(fileSize);// 设置大小
         file.close();
 
+        // 文件分割
         partSize = fileSize / threadNumber + 1;
         ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < threadNumber; i++) {
             int startPos = i * partSize;
 
+            // 开始下载 每个任务，从起点到重点
             executorService.execute(new ThreadTask(startPos,partSize,targetFilePathAndName));
         }
         executorService.shutdown();
@@ -86,6 +98,7 @@ public class DownLoadUtils {
         conn.setRequestProperty("Charset", "UTF-8");
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
         conn.setRequestProperty("Connection", "Keep-Alive");
+        conn.setRequestProperty("Accept-Encoding", "identity");
 //        conn.connect();
         return conn;
     }

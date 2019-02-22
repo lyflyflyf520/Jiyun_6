@@ -42,6 +42,11 @@ public class ThreadTask implements Runnable {
     }
 
     private static final String TAG = "ThreadTask";
+
+    /**
+     * 去网络读取服务器文件的流inputStream
+     * 然后写入到本地文件里
+     */
     private void doHttpTask() {
         try {
             HttpURLConnection connection = DownLoadUtils.getConnection();

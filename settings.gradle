@@ -1,3 +1,4 @@
+//include ':day14_upload_file', ':day15'
 //include ':LoginDemo'
 //include ':day1'
 //include ':day2'
@@ -26,7 +27,12 @@
 //include ':day12_uploadfile', ':MoreThreadUploadFile'
 //include ':day12_retrofit_uploadfile'
 //include ':UploadFile', ':UploadFile_retrofit'
-include ':day13'
+//include ':day13'
+// include ':day14'
+//include':day14_downloadfile'
 //include ':day13_user_icon'
-include ':day13_upload_video', ':MoreThreadLoadfile'
+//include ':day13_upload_video',
+//include':MoreThreadLoadfile'
+include ':MonthDemo'
+include ':seniorproject'
 

@@ -113,8 +113,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 try {
                     DownLoadUtils downLoadUtils = new DownLoadUtils();
-
-                    downLoadUtils.start(MainActivity.this, apk_url, null, 3, "UnknowApp-1.0.apk");
+            //*      @param sourcePath 目标URL
+            //     * @param targetFilePath 目标保存路径
+            //     * @param threadNumber 开启的线程数
+            //     * @param fileName 保存的文件名
+                    downLoadUtils.start(MainActivity.this,
+                            apk_url,
+                            null,
+                            3,
+                            "UnknowApp-1.0.apk");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
