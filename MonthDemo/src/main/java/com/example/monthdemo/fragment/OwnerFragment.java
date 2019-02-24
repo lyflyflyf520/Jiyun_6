@@ -73,7 +73,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 //拍照完成，进行图片裁切
                 File file = new File("/mnt/sdcard/tupian.jpg");
                 filtUri = FileProviderUtils.uriFromFile(getActivity(), file);
-                PhotosUtils.Caiqie(getActivity(), filtUri, outputFile);
+                PhotosUtils.doCrop(getActivity(), filtUri, outputFile);
                 break;
             case PhotosUtils.REQUEST_CODE_ZHAOPIAN:
                 //相册选择图片完毕，进行图片裁切
@@ -81,7 +81,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 filtUri = data.getData();
-                PhotosUtils.Caiqie(getActivity(), filtUri, outputFile);
+                PhotosUtils.doCrop(getActivity(), filtUri, outputFile);
                 break;
             case PhotosUtils.REQUEST_CODE_CAIQIE:
                 //图片裁切完成，显示裁切后的图片
@@ -124,11 +124,11 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
             case R.id.open_album:
-                PhotosUtils.zhaopian(getActivity());
+                PhotosUtils.selectPhoto(getActivity());
                 break;
             case R.id.open_from_camera:
                 File file = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
-                PhotosUtils.paizhao(getActivity(),file);
+                PhotosUtils.goCamera(getActivity(),file);
                 break;
             case R.id.loginclick:
                 login();

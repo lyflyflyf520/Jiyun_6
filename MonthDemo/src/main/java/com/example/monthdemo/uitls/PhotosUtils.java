@@ -19,7 +19,12 @@ public class PhotosUtils {
     public static final int REQUEST_CODE_ZHAOPIAN = 2;
     public static final int REQUEST_CODE_CAIQIE = 3;
 
-    public static void paizhao(Activity activity, File outputFile){
+    /**
+     * 拍照
+     * @param activity
+     * @param outputFile
+     */
+    public static void goCamera(Activity activity, File outputFile){
         Intent intent = new Intent();
         intent.setAction("android.media.action.IMAGE_CAPTURE");
         intent.addCategory("android.intent.category.DEFAULT");
@@ -28,7 +33,11 @@ public class PhotosUtils {
         activity.startActivityForResult(intent, REQUEST_CODE_PAIZHAO);
     }
 
-    public static void zhaopian(Activity activity){
+    /**
+     * 拍照
+     * @param activity
+     */
+    public static void selectPhoto(Activity activity){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction("android.intent.action.PICK");
@@ -36,7 +45,13 @@ public class PhotosUtils {
         activity.startActivityForResult(intent, REQUEST_CODE_ZHAOPIAN);
     }
 
-    public static void Caiqie(Activity activity, Uri uri, File outputFile) {
+    /**
+     * 裁剪
+     * @param activity
+     * @param uri
+     * @param outputFile
+     */
+    public static void doCrop(Activity activity, Uri uri, File outputFile) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         FileProviderUtils.setIntentDataAndType(activity, intent, "image/*", uri, true);
         intent.putExtra("crop", "true");
