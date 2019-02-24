@@ -16,8 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.example.monthdemo.R;
 import com.example.monthdemo.uitls.FileProviderUtils;
+import com.example.monthdemo.uitls.GlideApp;
 import com.example.monthdemo.uitls.PhotosUtils;
 import com.example.monthdemo.view.DialogFromBottom;
 
@@ -88,7 +90,19 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 try {
                     Uri uri = Uri.fromFile(outputFile);
                     Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
-                    mUserImg.setImageBitmap(bitmap);
+//                    mUserImg.setImageBitmap(bitmap);
+
+                    RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
+                            .skipMemoryCache(true);//不做内存缓存
+
+
+                    GlideApp.with(this)
+                            .load(bitmap)
+                            .centerCrop()
+                            .apply(mRequestOptions)
+                            .placeholder(R.drawable.ic_launcher_background)//加载中显示的图片
+                            .error(R.drawable.ic_launcher_foreground)// 错误后显示的图片
+                            .into(mUserImg);
                 }catch (Exception ex){
                     ex.printStackTrace();
                 }
@@ -125,10 +139,12 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.open_album:
                 PhotosUtils.selectPhoto(getActivity());
+                dialogFromBottom.dismiss();
                 break;
             case R.id.open_from_camera:
                 File file = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
                 PhotosUtils.goCamera(getActivity(),file);
+                dialogFromBottom.dismiss();
                 break;
             case R.id.loginclick:
                 login();

@@ -7,14 +7,16 @@
         android:id="@+id/user_img"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/home"
-        android:layout_marginTop="50dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/home" />
 
 
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/user_img"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="150dp"
@@ -24,6 +26,7 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/username"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="25dp"
@@ -33,6 +36,7 @@
         android:id="@+id/loginclick"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_below="@id/password"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_marginTop="25dp"
