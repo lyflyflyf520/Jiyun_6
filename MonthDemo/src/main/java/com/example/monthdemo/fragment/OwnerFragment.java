@@ -1,17 +1,14 @@
 package com.example.monthdemo.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,19 +17,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.monthdemo.R;
+import com.example.monthdemo.uitls.FileProviderUtils;
+import com.example.monthdemo.uitls.PhotosUtils;
 import com.example.monthdemo.view.DialogFromBottom;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class OwnerFragment extends Fragment implements View.OnClickListener {
-    private final int PHOTO_REQUEST_CAMERA = 99;
-    private final int PHOTO_REQUEST_GALLERY = 111;
-    private static Uri mCutTempFile;
-    private final int PHOTO_REQUEST_CUT = 121;
-    private static File mCameraTempFile;
     private View view;
     private ImageView mUserImg;
     /**
@@ -75,49 +66,37 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Uri filtUri;
+        File outputFile = new File("/mnt/sdcard/tupian_out.jpg");//裁切后输出的图片
         switch (requestCode) {
-            case PHOTO_REQUEST_GALLERY:
-                if (data != null)
-                    openCropActivity(getActivity(), data.getData());
+            case PhotosUtils.REQUEST_CODE_PAIZHAO:
+                //拍照完成，进行图片裁切
+                File file = new File("/mnt/sdcard/tupian.jpg");
+                filtUri = FileProviderUtils.uriFromFile(getActivity(), file);
+                PhotosUtils.Caiqie(getActivity(), filtUri, outputFile);
                 break;
-            case PHOTO_REQUEST_CAMERA:
-                File cameraTempFile = getCameraTempFile();
-                if (cameraTempFile != null) {
-                    Uri photoURI = FileProvider.getUriForFile(getActivity(), getActivity().getApplicationContext().getPackageName(), mCameraTempFile);
-
-                    openCropActivity(getActivity(), photoURI);
+            case PhotosUtils.REQUEST_CODE_ZHAOPIAN:
+                //相册选择图片完毕，进行图片裁切
+                if (data == null ||  data.getData()==null) {
+                    return;
                 }
-
+                filtUri = data.getData();
+                PhotosUtils.Caiqie(getActivity(), filtUri, outputFile);
                 break;
-            case PHOTO_REQUEST_CUT:
-                mUserImg.setImageBitmap(getAfterCropBitmap(getActivity()));
+            case PhotosUtils.REQUEST_CODE_CAIQIE:
+                //图片裁切完成，显示裁切后的图片
+                try {
+                    Uri uri = Uri.fromFile(outputFile);
+                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
+                    mUserImg.setImageBitmap(bitmap);
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
                 break;
         }
     }
 
-    public static Bitmap getAfterCropBitmap(Activity activity) {
 
-        Uri mCutTempFile = getCutTempFile();
-        Bitmap bitmap = null;
-        try {
-
-            InputStream stream = activity.getContentResolver().openInputStream(mCutTempFile);
-
-            bitmap = BitmapFactory.decodeStream(stream, null, null);
-            stream.close();
-        } catch (Exception e) {
-            return null;
-        }
-        return bitmap;
-    }
-
-    public static File getCameraTempFile() {
-        return mCameraTempFile;
-    }
-
-    public static Uri getCutTempFile() {
-        return mCutTempFile;
-    }
 
     public void uploadFile() {
 
@@ -145,10 +124,11 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
             default:
                 break;
             case R.id.open_album:
-                openGallery(getActivity());
+                PhotosUtils.zhaopian(getActivity());
                 break;
             case R.id.open_from_camera:
-                openCamera(getActivity());
+                File file = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
+                PhotosUtils.paizhao(getActivity(),file);
                 break;
             case R.id.loginclick:
                 login();
@@ -159,54 +139,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    /*
-     * 剪切图片
-     */
-    public void openCropActivity(Activity activity, Uri uri) {
 
-        File file = new File(Environment.getExternalStorageDirectory() + File.separator + "Crop.jpg");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        mCutTempFile = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName(), file);
-
-
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.putExtra("crop", "true");
-        intent.putExtra("outputFormat", "JPEG");// 图片格式
-        intent.putExtra("noFaceDetection", true);// 取消人脸识别
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mCutTempFile);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-
-
-        activity.startActivityForResult(intent, PHOTO_REQUEST_CUT);
-    }
-
-    /*
-     * 从相机获取
-     */
-    public void openCamera(Activity activity) {
-        mCameraTempFile = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
-        Uri photoURI = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName(), mCameraTempFile);
-
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-        activity.startActivityForResult(intent, PHOTO_REQUEST_CAMERA);
-    }
-
-    /*
-     * 从相册获取
-     */
-    public void openGallery(Activity activity) {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        activity.startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
-    }
 
 
 }
