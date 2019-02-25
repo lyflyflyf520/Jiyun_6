@@ -25,6 +25,8 @@ import com.example.monthdemo.presenter.UpdatePresenterImpl;
 import com.example.monthdemo.view.IView;
 
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +72,9 @@ public class MainActivity extends AppCompatActivity implements IView {
 
         initMvp();
 
-        initReceiver();
+
+
+//        initReceiver();
 
     }
 
@@ -88,24 +92,26 @@ public class MainActivity extends AppCompatActivity implements IView {
         updatePresenter.viewToModel();
 
     }
-    HomeFragment.MyReceiver myReceiver;
-    public void initReceiver(){
-        // 1. 实例化BroadcastReceiver子类 &  IntentFilter
-         myReceiver = new HomeFragment.MyReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-
-        // 2. 设置接收广播的类型
-        intentFilter.addAction("com.monthdemo.recevier.imgurl");
-
-        // 3. 动态注册：调用Context的registerReceiver（）方法
-       registerReceiver(myReceiver, intentFilter);
-    }
+//    HomeFragment.MyReceiver myReceiver;
+//    public void initReceiver(){
+//        // 1. 实例化BroadcastReceiver子类 &  IntentFilter
+//         myReceiver = new HomeFragment.MyReceiver();
+//        IntentFilter intentFilter = new IntentFilter();
+//
+//        // 2. 设置接收广播的类型
+//        intentFilter.addAction("com.monthdemo.recevier.imgurl");
+//
+//        // 3. 动态注册：调用Context的registerReceiver（）方法
+//       registerReceiver(myReceiver, intentFilter);
+//    }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(myReceiver);
+//        unregisterReceiver(myReceiver);
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

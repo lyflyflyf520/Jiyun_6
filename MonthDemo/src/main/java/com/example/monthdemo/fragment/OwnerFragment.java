@@ -26,6 +26,7 @@ import com.example.monthdemo.uitls.GlideApp;
 import com.example.monthdemo.uitls.PhotosUtils;
 import com.example.monthdemo.view.DialogFromBottom;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,7 +61,8 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     private View dialogContent;
 
     private static final String TAG = "OwnerFragment";
-    private String uploadUrl="http://yun918.cn/study/public/file_upload.php";
+    private String uploadUrl = "http://yun918.cn/study/public/file_upload.php";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -99,7 +101,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 break;
             case PhotosUtils.REQUEST_CODE_ZHAOPIAN:
                 //相册选择图片完毕，进行图片裁切
-                if (data == null ||  data.getData()==null) {
+                if (data == null || data.getData() == null) {
                     return;
                 }
                 filtUri = data.getData();
@@ -126,7 +128,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                     // file path
                     // okhttp
                     uploadUserIcon(outputFile);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 break;
@@ -134,21 +136,20 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
-    public void uploadUserIcon(final File file){
+    public void uploadUserIcon(final File file) {
 
         // file --> RequestBody-- MultiPartBody
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"),file);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);
 
         MultipartBody multipartBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("key","monthdemo")
-                .addFormDataPart("file",file.getName(),requestBody)
+                .addFormDataPart("key", "monthdemo")
+                .addFormDataPart("file", file.getName(), requestBody)
                 .build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
-        Request request =new Request.Builder()
+        Request request = new Request.Builder()
                 .url(uploadUrl)
                 .post(multipartBody)
                 .build();
@@ -156,7 +157,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d(TAG, "onFailure: e="+e.getMessage());
+                Log.d(TAG, "onFailure: e=" + e.getMessage());
             }
 
             @Override
@@ -166,22 +167,19 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
 
-                    jsonObject = jsonObject.getJSONObject("data");
-                    String result = jsonObject.optString("url");
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    String result = data.optString("url");
 
                     // 把图片的服务器url 发送给homeFragment
-//                    MsgEvent msgEvent = new MsgEvent();
-//                    msgEvent.imgUrl = result;
+                    MsgEvent msgEvent = new MsgEvent();
+                    msgEvent.imgUrl = file.getAbsolutePath();
 
-                    Intent intent = new Intent("com.monthdemo.recevier.imgurl");
-                    intent.putExtra("imgUrl",file.getAbsolutePath());
+                    EventBus.getDefault().postSticky(msgEvent);
 
-                    getActivity().sendBroadcast(intent);
-
+                    Log.d(TAG, "onResponse: " + result);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-//                Log.d(TAG, "onResponse: "+response.body().string());
             }
         });
     }
@@ -222,7 +220,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.open_from_camera:
                 File file = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
-                PhotosUtils.goCamera(getActivity(),file);
+                PhotosUtils.goCamera(getActivity(), file);
                 dialogFromBottom.dismiss();
                 break;
             case R.id.loginclick:
@@ -233,8 +231,6 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-
-
 
 
 }

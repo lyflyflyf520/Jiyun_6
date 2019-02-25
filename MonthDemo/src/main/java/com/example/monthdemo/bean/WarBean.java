@@ -1,5 +1,9 @@
 package com.example.monthdemo.bean;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+@Entity
 public class WarBean {
 
     /**
@@ -34,7 +38,8 @@ public class WarBean {
      * skipType : photoset
      * cid : C1348647991705
      */
-
+    @Id
+    private Long id;
     private String template;
     private String skipID;
     private String lmodify;
@@ -65,6 +70,50 @@ public class WarBean {
     private boolean hasIcon;
     private String skipType;
     private String cid;
+
+    @Generated(hash = 499958848)
+    public WarBean(Long id, String template, String skipID, String lmodify, String postid,
+            String source, String title, String mtime, int hasImg, String topic_background,
+            String digest, String photosetID, String boardid, String alias, int hasAD, String imgsrc,
+            String ptime, String daynum, int hasHead, int order, int votecount, boolean hasCover,
+            String docid, String tname, int priority, String ename, int replyCount, int imgsum,
+            boolean hasIcon, String skipType, String cid) {
+        this.id = id;
+        this.template = template;
+        this.skipID = skipID;
+        this.lmodify = lmodify;
+        this.postid = postid;
+        this.source = source;
+        this.title = title;
+        this.mtime = mtime;
+        this.hasImg = hasImg;
+        this.topic_background = topic_background;
+        this.digest = digest;
+        this.photosetID = photosetID;
+        this.boardid = boardid;
+        this.alias = alias;
+        this.hasAD = hasAD;
+        this.imgsrc = imgsrc;
+        this.ptime = ptime;
+        this.daynum = daynum;
+        this.hasHead = hasHead;
+        this.order = order;
+        this.votecount = votecount;
+        this.hasCover = hasCover;
+        this.docid = docid;
+        this.tname = tname;
+        this.priority = priority;
+        this.ename = ename;
+        this.replyCount = replyCount;
+        this.imgsum = imgsum;
+        this.hasIcon = hasIcon;
+        this.skipType = skipType;
+        this.cid = cid;
+    }
+
+    @Generated(hash = 1454364269)
+    public WarBean() {
+    }
 
     public String getTemplate() {
         return template;
@@ -304,5 +353,21 @@ public class WarBean {
 
     public void setCid(String cid) {
         this.cid = cid;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean getHasCover() {
+        return this.hasCover;
+    }
+
+    public boolean getHasIcon() {
+        return this.hasIcon;
     }
 }

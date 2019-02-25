@@ -12,12 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.monthdemo.R;
 import com.example.monthdemo.bean.WarBean;
 import com.example.monthdemo.adapter.RecyclerViewAdapter;
 import com.example.monthdemo.service.HomeService;
 import com.example.monthdemo.uitls.Contants;
+import com.example.monthdemo.uitls.DbUtils;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -133,6 +135,15 @@ public class ItemFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
         recyclerViewAdapter.updateDate(data);
+
+        recyclerViewAdapter.setOnLongClick(new RecyclerViewAdapter.onLongClick() {
+            @Override
+            public void onLongItemClick(WarBean warBean) {
+                // 点击收藏item
+                DbUtils.insert(warBean);
+                Toast.makeText(getActivity(), "收藏了"+warBean.getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

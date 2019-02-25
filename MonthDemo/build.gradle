@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
     compileSdkVersion 28
@@ -22,6 +23,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    greendao {
+        schemaVersion 1  // 数据库的版本号
+        daoPackage 'com.example.monthdemo.dao'  // 包名
+        targetGenDir 'src/main/java' // 存放的目录地址
     }
 
 }
@@ -51,4 +57,9 @@ dependencies {
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.android.support:design:28.0.0'
+
+    implementation 'org.greenrobot:greendao:3.2.0'
+    implementation 'org.greenrobot:greendao-generator:3.2.0'
+
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }

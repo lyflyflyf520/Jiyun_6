@@ -31,6 +31,10 @@ import com.example.monthdemo.service.HomeService;
 import com.example.monthdemo.uitls.Contants;
 import com.example.monthdemo.uitls.GlideApp;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,20 +99,29 @@ public class HomeFragment extends Fragment {
 
     private static String userImgUrl = "";
 
-    public static class MyReceiver extends BroadcastReceiver {
+//    public static class MyReceiver extends BroadcastReceiver {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            // 给主界面的用户头像url 赋值
+//            if (intent.getAction().equals("com.monthdemo.recevier.imgurl")) {
+//
+//                userImgUrl = intent.getStringExtra("imgUrl");
+//                Log.d(TAG, "onReceive: =接收成功=" + userImgUrl);
+//
+//            }
+//        }
+//    }
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // 给主界面的用户头像url 赋值
-            if (intent.getAction().equals("com.monthdemo.recevier.imgurl")) {
-
-                userImgUrl = intent.getStringExtra("imgUrl");
-                Log.d(TAG, "onReceive: =接收成功=" + userImgUrl);
-
-            }
+    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
+    public void onMsgEvent(MsgEvent msgEvent) {
+        Log.d(TAG, "onMsgEvent: " + msgEvent.imgUrl);
+        userImgUrl = msgEvent.imgUrl;
+        if (!TextUtils.isEmpty(userImgUrl)) {
+            mUserImg.setImageBitmap(null);
+            mUserImg.setImageBitmap(BitmapFactory.decodeFile(new File(userImgUrl).toString()));
         }
     }
-
 
     private void initData() {
 
@@ -194,7 +207,8 @@ public class HomeFragment extends Fragment {
 
     /**
      * 可见的时候 被触发
-     *  这个方法不能直接UI展示
+     * 这个方法不能直接UI展示
+     *
      * @param isVisibleToUser
      */
     @Override
@@ -202,9 +216,18 @@ public class HomeFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
 
+        if (!EventBus.getDefault().isRegistered(this)) {
+
+            EventBus.getDefault().register(this);
+        }
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
 
     private void initView(View root) {
         mUserImg = (ImageView) root.findViewById(R.id.user_img);
