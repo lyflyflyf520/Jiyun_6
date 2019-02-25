@@ -1,22 +1,37 @@
 package com.example.monthdemo.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.monthdemo.R;
-import com.example.monthdemo.bean.TagBean;
 import com.example.monthdemo.adapter.FmPagerAdapter;
+import com.example.monthdemo.bean.MsgEvent;
+import com.example.monthdemo.bean.TagBean;
 import com.example.monthdemo.service.HomeService;
 import com.example.monthdemo.uitls.Contants;
+import com.example.monthdemo.uitls.GlideApp;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +55,7 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     List<TagBean.ChannelsBean> channels;
     private List<Fragment> fragments = new ArrayList<>();
+    private ImageView mUserImg;
 
     @Nullable
     @Override
@@ -49,12 +65,50 @@ public class HomeFragment extends Fragment {
         mTablayout = root.findViewById(R.id.home_tablayout);
         mViewpager = root.findViewById(R.id.home_viewpager);
 
+
         isCreated = true;
 
         ButterKnife.bind(this, root);
         initData();
+        initView(root);
         return root;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Log.d(TAG, "onStart: ");
+
+        if (isVisible) {
+
+            Log.d(TAG, "setUserVisibleHint: userImgUrl=" + userImgUrl);
+            if (!TextUtils.isEmpty(userImgUrl)) {
+                mUserImg.setImageBitmap(null);
+                mUserImg.setImageBitmap(BitmapFactory.decodeFile(new File(userImgUrl).toString()));
+            }
+
+        }
+
+    }
+
+
+    private static String userImgUrl = "";
+
+    public static class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // 给主界面的用户头像url 赋值
+            if (intent.getAction().equals("com.monthdemo.recevier.imgurl")) {
+
+                userImgUrl = intent.getStringExtra("imgUrl");
+                Log.d(TAG, "onReceive: =接收成功=" + userImgUrl);
+
+            }
+        }
+    }
+
 
     private void initData() {
 
@@ -105,7 +159,7 @@ public class HomeFragment extends Fragment {
             TagBean.ChannelsBean channelsBean = channels.get(x);
             ItemFragment itemFragment = new ItemFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("channel",channelsBean.getChannel());
+            bundle.putString("channel", channelsBean.getChannel());
             itemFragment.setArguments(bundle);
 
             fragments.add(itemFragment);
@@ -121,10 +175,12 @@ public class HomeFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewpager.setCurrentItem(tab.getPosition());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
             }
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
@@ -136,9 +192,21 @@ public class HomeFragment extends Fragment {
     }
 
 
+    /**
+     * 可见的时候 被触发
+     *  这个方法不能直接UI展示
+     * @param isVisibleToUser
+     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
+
+
+    }
+
+
+    private void initView(View root) {
+        mUserImg = (ImageView) root.findViewById(R.id.user_img);
     }
 }

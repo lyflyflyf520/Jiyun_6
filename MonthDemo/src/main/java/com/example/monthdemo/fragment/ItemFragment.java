@@ -49,7 +49,7 @@ public class ItemFragment extends Fragment {
     private String channel;
     private View view;
     private ProgressBar progressBar;
-
+    private List<WarBean> warBeans = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,7 +90,7 @@ public class ItemFragment extends Fragment {
                         try {
                             JSONObject jsonObject = new JSONObject(value.string());
                             JSONArray jsonArray = jsonObject.getJSONArray("T1348648141035");
-                            List<WarBean> warBeans = new ArrayList<>();
+
                             for (int x=0;x<jsonArray.length();x++){
                                 JSONObject obj = jsonArray.getJSONObject(x);
                                 WarBean warBean = new Gson().fromJson(obj.toString(),WarBean.class);
@@ -117,8 +117,18 @@ public class ItemFragment extends Fragment {
 
     }
 
+    /**
+     * 当切换fragment的时候，发现已经有数据，就使用已经请求的数据
+     */
+    private void updateListAdapter(){
+        if(!warBeans.isEmpty()&&recyclerViewAdapter!=null){
+            recyclerViewAdapter.updateDate(warBeans);
+        }
+
+    }
+    RecyclerViewAdapter recyclerViewAdapter;
     private void setData2ListView(List<WarBean> data) {
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(getActivity());
+          recyclerViewAdapter = new RecyclerViewAdapter(getActivity());
         mRecyclerView.setAdapter(recyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
@@ -133,9 +143,9 @@ public class ItemFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         isVisible = isVisibleToUser;
-        if (isVisibleToUser){  // 可见 同时 有数据
-            // 加载数据
-            // 展示列表
+        if (isVisibleToUser&&(warBeans!=null&&!warBeans.isEmpty())){  // 判断当前fragment 是否可见 且集合不等于null
+            // 加载数据 展示数据
+            updateListAdapter();
 
         }
     }

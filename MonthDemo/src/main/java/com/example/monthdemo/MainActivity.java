@@ -3,6 +3,7 @@ package com.example.monthdemo;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,14 +13,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.monthdemo.adapter.FmPagerAdapter;
+import com.example.monthdemo.bean.MsgEvent;
 import com.example.monthdemo.fragment.HomeFragment;
 import com.example.monthdemo.fragment.MallFragment;
 import com.example.monthdemo.fragment.OwnerFragment;
 import com.example.monthdemo.presenter.UpdatePresenterImpl;
 import com.example.monthdemo.view.IView;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +39,13 @@ public class MainActivity extends AppCompatActivity implements IView {
     private FmPagerAdapter pagerAdapter;
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private String[] titles = new String[]{"首页","购物车","我"};
+//    private ImageView userImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
 
@@ -64,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements IView {
 
         initMvp();
 
+        initReceiver();
 
     }
 
@@ -81,7 +88,25 @@ public class MainActivity extends AppCompatActivity implements IView {
         updatePresenter.viewToModel();
 
     }
+    HomeFragment.MyReceiver myReceiver;
+    public void initReceiver(){
+        // 1. 实例化BroadcastReceiver子类 &  IntentFilter
+         myReceiver = new HomeFragment.MyReceiver();
+        IntentFilter intentFilter = new IntentFilter();
 
+        // 2. 设置接收广播的类型
+        intentFilter.addAction("com.monthdemo.recevier.imgurl");
+
+        // 3. 动态注册：调用Context的registerReceiver（）方法
+       registerReceiver(myReceiver, intentFilter);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(myReceiver);
+    }
 
     @Override
     public void updateInfo(String info) {
@@ -93,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements IView {
 
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+//        userImg = (ImageView) findViewById(R.id.user_img);
 
 
         fragments.add(new HomeFragment());
@@ -136,6 +162,7 @@ public class MainActivity extends AppCompatActivity implements IView {
 
         FragmentManager supportFragmentManager = getSupportFragmentManager();
 
+        // 接收onActivityResult 方式
         List<Fragment> fragments = supportFragmentManager.getFragments();
         for (Fragment fragment :fragments){
             if (fragment instanceof OwnerFragment ){
