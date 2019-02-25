@@ -30,6 +30,7 @@ public class ThreadTask implements Runnable {
         this.startPos = startPos;
         this.partSize = partSize;
 
+        // 创建本地的文件，定位到起点位置，便于当前线程从起点位置开始下载
         currentPart = new RandomAccessFile(targetFilePathAndName, "rw");
         currentPart.seek(startPos);
     }
@@ -54,12 +55,14 @@ public class ThreadTask implements Runnable {
             skipFully(in, startPos);
             byte[] bytes = new byte[8*1024];
             int hasRead;
+            // 开始读取流的操作
             while ((currentDownLoaded < partSize) && (hasRead = in.read(bytes)) > 0) {
-                currentPart.write(bytes, 0, hasRead);
+                currentPart.write(bytes, 0, hasRead);// 写入数据到本地文件
                 currentDownLoaded += hasRead;
 
                 Log.d(TAG, "doHttpTask: thread="+Thread.currentThread().getName()+"--"+currentDownLoaded);
             }
+            // 关闭各种流操作
             currentPart.close();
             in.close();
             connection.disconnect();
@@ -70,7 +73,7 @@ public class ThreadTask implements Runnable {
             e.printStackTrace();
         } finally {
             restTask--;
-            if (restTask == 0){
+            if (restTask == 0){// 当前下载的线程数量为0，下载完成
                 new DownLoadUtils().installAPK();
                 Log.d(TAG, "doHttpTask: 下载完成");
             }

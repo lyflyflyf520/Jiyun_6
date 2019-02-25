@@ -18,6 +18,12 @@ import java.io.IOException;
 
 import static android.Manifest.permission.WRITE_SECURE_SETTINGS;
 
+/**
+ * 多线程下载原理：
+ * 把一个文件分为N段，然后创建N个线程
+ * 计算每个线程对应下载文件的起点位置和长度
+ * 然后去下载每一段的数据。当所有的线程执行完毕，且没有异常，证明下载完毕
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
@@ -79,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void installApk() {
 
-        String  targetFilePathAndName = Environment.getExternalStorageDirectory() + File.separator+"UnknowApp-1.0.apk";
+        String targetFilePathAndName = Environment.getExternalStorageDirectory() + File.separator + "UnknowApp-1.0.apk";
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -104,29 +110,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //UnknowApp-1.0.apk
     private String apk_url = "http://yun918.cn/study/public/res/UnknowApp-1.0.apk";
 
+    /**
+     * 下载文件的方法
+     */
     private void loadFile() {
 
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-
-                try {
-                    DownLoadUtils downLoadUtils = new DownLoadUtils();
-            //*      @param sourcePath 目标URL
-            //     * @param targetFilePath 目标保存路径
-            //     * @param threadNumber 开启的线程数
-            //     * @param fileName 保存的文件名
-                    downLoadUtils.start(MainActivity.this,
-                            apk_url,
-                            null,
-                            3,
-                            "UnknowApp-1.0.apk");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
+        try {
+            DownLoadUtils downLoadUtils = new DownLoadUtils();
+            // 开始下载文件
+            downLoadUtils.startMoreThreadDownLoadFile(MainActivity.this,
+                    apk_url,
+                    null,
+                    3,
+                    "UnknowApp-1.0.apk");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }

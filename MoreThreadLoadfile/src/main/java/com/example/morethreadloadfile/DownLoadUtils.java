@@ -46,13 +46,13 @@ public class DownLoadUtils {
     static Context context;
     /**
      * 开始一次下载
-     * @param sourcePath 目标URL
-     * @param targetFilePath 目标保存路径
+     * @param sourcePath 服务器文件URL
+     * @param targetFilePath 保存文件到本地的路径
      * @param threadNumber 开启的线程数
-     * @param fileName 保存的文件名
-     * @return 开启任务成功否
+     * @param fileName 下载文件的文件名
+     * @return 开启任务是否成功
      */
-    public boolean start( Context context, String sourcePath,  String targetFilePath, int threadNumber,   String fileName) throws IOException {
+    public boolean startMoreThreadDownLoadFile(Context context, String sourcePath, String targetFilePath, final int threadNumber, String fileName) throws IOException {
         this.sourcePath = sourcePath;
         this.context = context;
         this.targetFilePathAndName = targetFilePath == null ? DEFAULT_TARGET_FOLDER_PATH
@@ -61,29 +61,43 @@ public class DownLoadUtils {
         this.threadNumber = threadNumber < 0 || threadNumber > MAX_THREAD_NUMBER ? this.threadNumber : threadNumber;
         this.restTask = this.threadNumber;
 
-        // 1.获取下载的文件大小--去服务器读取  10MB
-        // 2.获取文件大小后，根据线程的数量来分割 每个线程下载应该下载的文件大小(startpos--endpos)
-        // 3.最终每个线程去下载各自的文件片段
-//        4.启动多个线程 去真实下载文件
-        HttpURLConnection conn = getConnection();
-        fileSize = conn.getContentLength();
-        conn.disconnect();
+        // 开启线程，请求服务器获取文件的大小filesize
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
 
-        // 创建本地 下载的文件
-        RandomAccessFile file = new RandomAccessFile(targetFilePathAndName, "rw");
-        file.setLength(fileSize);// 设置大小
-        file.close();
+                try {
 
-        // 文件分割
-        partSize = fileSize / threadNumber + 1;
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        for (int i = 0; i < threadNumber; i++) {
-            int startPos = i * partSize;
+                    // 1.获取下载的文件大小--去服务器读取  10MB
+                    HttpURLConnection conn = getConnection();
+                    fileSize = conn.getContentLength();
+                    conn.disconnect();// 关闭连接
 
-            // 开始下载 每个任务，从起点到重点
-            executorService.execute(new ThreadTask(startPos,partSize,targetFilePathAndName));
-        }
-        executorService.shutdown();
+                    // 创建本地 下载的文件
+                    RandomAccessFile file = new RandomAccessFile(targetFilePathAndName, "rw");
+                    file.setLength(fileSize);// 设置本地文件的大小
+                    file.close();
+
+                    // 获取每段文件的大小
+                    partSize = fileSize / threadNumber + 1;
+                    // 创建线程池对象，管理多个线程
+                    ExecutorService executorService = Executors.newCachedThreadPool();
+                    for (int i = 0; i < threadNumber; i++) {
+                        // 获取 每段文件的下载起点位置
+                        int startPos = i * partSize;
+
+                        //4.启动多个线程 去真实下载文件 开始下载 每个任务，从起点开始，下载大小为partsize
+                        executorService.execute(new ThreadTask(startPos,partSize,targetFilePathAndName));
+                    }
+                    executorService.shutdown();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }.start();
+
         return true;
     }
 
