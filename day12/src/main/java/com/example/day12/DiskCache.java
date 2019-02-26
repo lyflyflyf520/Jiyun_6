@@ -30,9 +30,10 @@ public class DiskCache {
 
     public DiskCache(File directory, long maxSize) {
         try {
-            mDiskLruCache = DiskLruCache.open(directory, 1, 1, maxSize);
+            if (mDiskLruCache == null || mDiskLruCache.isClosed()) {
 
-
+                mDiskLruCache = DiskLruCache.open(directory, 1, 1, maxSize);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,30 +46,39 @@ public class DiskCache {
      * @param url    图片请求url  --》 md5  去除特殊字符
      * @param bitmap
      */
-    public void saveBitmap(String url, Bitmap bitmap) {
+    public void saveBitmap(final String url, Bitmap bitmap) {
 
-        try {
-            String key = Utils.hashKeyForDisk(url);
-            //editor 操作数据保存逻辑
-            DiskLruCache.Editor editor = mDiskLruCache.edit(key);
-            OutputStream os = editor.newOutputStream(0);
-            //此处存的一个 bitmap 对象因此用 ObjectOutputStream
-            ObjectOutputStream outputStream = new ObjectOutputStream(os);
 
-            // 下载图片
-            if (downloadImage(url, outputStream)) {
-                editor.commit();
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    String key = Utils.hashKeyForDisk(url);
+                    //editor 操作数据保存逻辑
+                    DiskLruCache.Editor editor = mDiskLruCache.edit(key);
+                    OutputStream outputStream = editor.newOutputStream(0);
+                    //此处存的一个 bitmap 对象因此用 ObjectOutputStream
+//                    ObjectOutputStream outputStream = new ObjectOutputStream(os);
 
-            } else {
-                editor.abort();
+                    // 下载图片
+                    if (downloadImage(url, outputStream)) {
+                        editor.commit();
+
+                    } else {
+                        editor.abort();
+                    }
+                    //别忘了关闭流和提交编辑
+                    outputStream.close();
+                    mDiskLruCache.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
             }
-            mDiskLruCache.flush();
-            //别忘了关闭流和提交编辑
-            outputStream.close();
+        }.start();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -107,14 +117,16 @@ public class DiskCache {
      * @return 返回时候完成下载成功
      */
     private boolean downloadImage(String imgUrl, OutputStream outputStream) {
+
+
         HttpURLConnection urlConnection = null;
         BufferedOutputStream out = null;
         BufferedInputStream in = null;
         try {
             URL url = new URL(imgUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
-            in = new BufferedInputStream(urlConnection.getInputStream(), 8 * 1024);//Buffer输入流，8M大小的缓存
-            out = new BufferedOutputStream(outputStream, 8 * 1024);
+            in = new BufferedInputStream(urlConnection.getInputStream(), 2 * 1024);//Buffer输入流，8M大小的缓存
+            out = new BufferedOutputStream(outputStream, 2 * 1024);
             int b;//正在读取的byte
             while ((b = in.read()) != -1) {
                 out.write(b);

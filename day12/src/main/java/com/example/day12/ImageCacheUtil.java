@@ -9,8 +9,6 @@ import android.graphics.Bitmap;
  */
 public class ImageCacheUtil {
 
-    //
-
     MemCache memCache;
     DiskCache diskCache;
 
@@ -41,7 +39,6 @@ public class ImageCacheUtil {
      * @return
      */
     public Bitmap getBitmap(String url){
-
         Bitmap bitmap = memCache.getBitmap(url);
 
         if (bitmap==null){
