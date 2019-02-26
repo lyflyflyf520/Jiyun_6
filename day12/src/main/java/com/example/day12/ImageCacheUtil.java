@@ -9,8 +9,8 @@ import android.graphics.Bitmap;
  */
 public class ImageCacheUtil {
 
-    MemCache memCache;
-    DiskCache diskCache;
+    private MemCache memCache;
+    private DiskCache diskCache;
 
     public ImageCacheUtil(Context context) {
         this.memCache= new MemCache();
