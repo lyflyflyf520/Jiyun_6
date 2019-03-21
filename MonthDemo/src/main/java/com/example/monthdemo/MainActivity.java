@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_SECURE_SETTINGS;
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements IView {
          */
         if (Build.VERSION.SDK_INT >= 23) {
             int REQUEST_CODE_CONTACT = 101;
-            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE,CAMERA
                     };
             //验证是否许可权限
             for (String str : permissions) {
