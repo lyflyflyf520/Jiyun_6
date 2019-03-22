@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.monthdemo.R;
 import com.example.monthdemo.bean.MsgEvent;
@@ -90,13 +91,15 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String filePath = Environment.getExternalStorageDirectory() + File.separator ;
+
         Uri filtUri;
-        File outputFile = new File("/mnt/sdcard/tupian_out.jpg");//裁切后输出的图片
+        File outputFile = new File(filePath+"tupian_out.jpg");//裁切后输出的图片
         switch (requestCode) {
             case PhotosUtils.REQUEST_CODE_PAIZHAO:
                 //拍照完成，进行图片裁切
-                File file = new File("/mnt/sdcard/tupian.jpg");
-                filtUri = FileProviderUtils.uriFromFile(getActivity(), file);
+                filtUri = FileProviderUtils.uriFromFile(getActivity(), camerafile);
+
                 PhotosUtils.doCrop(getActivity(), filtUri, outputFile);
                 break;
             case PhotosUtils.REQUEST_CODE_ZHAOPIAN:
@@ -110,24 +113,21 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
             case PhotosUtils.REQUEST_CODE_CAIQIE:
                 //图片裁切完成，显示裁切后的图片
                 try {
-                    Uri uri = Uri.fromFile(outputFile);
-                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
-//                    mUserImg.setImageBitmap(bitmap);
+                    Uri uri = FileProviderUtils.uriFromFile(getActivity(), outputFile);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
 
                     RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
-                            .skipMemoryCache(true);//不做内存缓存
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE);
 
 
                     GlideApp.with(this)
-                            .load(bitmap)
-                            .centerCrop()
+                            .load(uri)
                             .apply(mRequestOptions)
-                            .placeholder(R.drawable.ic_launcher_background)//加载中显示的图片
-                            .error(R.drawable.ic_launcher_foreground)// 错误后显示的图片
                             .into(mUserImg);
                     // file path
                     // okhttp
-                    uploadUserIcon(outputFile);
+//                    uploadUserIcon(outputFile);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -208,7 +208,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
         mLoginclick.setOnClickListener(this);
         mUserImg.setOnClickListener(this);
     }
-
+    File camerafile;
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -219,8 +219,8 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 dialogFromBottom.dismiss();
                 break;
             case R.id.open_from_camera:
-                File file = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
-                PhotosUtils.goCamera(getActivity(), file);
+                camerafile = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
+                PhotosUtils.goCamera(getActivity(), camerafile);
                 dialogFromBottom.dismiss();
                 break;
             case R.id.loginclick:

@@ -9,6 +9,8 @@ import android.support.v4.content.FileProvider;
 
 import java.io.File;
 
+import static com.example.monthdemo.uitls.PhotosUtils.AUTHORY;
+
 /**
  * 类：FileProviderUtils
  * 从APP向外共享的文件URI时，必须使用该类进行适配，
@@ -25,10 +27,9 @@ public class FileProviderUtils {
         Uri fileUri;
         //7.0以上进行适配
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            String p = activity.getPackageName() + "";
             fileUri = FileProvider.getUriForFile(
                     activity,
-                    p,
+                    AUTHORY,
                     file);
         } else {
             fileUri = Uri.fromFile(file);

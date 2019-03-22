@@ -18,6 +18,7 @@ public class PhotosUtils {
     public static final int REQUEST_CODE_PAIZHAO = 1;
     public static final int REQUEST_CODE_ZHAOPIAN = 2;
     public static final int REQUEST_CODE_CAIQIE = 3;
+    public static final String AUTHORY = "com.example.monthdemo.fileprovider";
 
     /**
      * 拍照

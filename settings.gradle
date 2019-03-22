@@ -29,9 +29,9 @@
 //include ':UploadFile', ':UploadFile_retrofit'
 //include ':day13'
 // include ':day14'
-include':day14_downloadfile',':day14_upload_file'
+//include':day14_downloadfile',':day14_upload_file'
 //include ':day13_user_icon'
-//include ':day13_upload_video',
+//include ':day13_upload_video'
 //include':MoreThreadLoadfile'
-//include ':MonthDemo'
+include ':MonthDemo'
 
