@@ -29,8 +29,6 @@ public class PhotosUtils {
      * @param activity
      */
     public static void goCamera(Activity activity, File imageFile) {
-
-
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);//打开相机的Intent
         if(takePhotoIntent.resolveActivity(activity.getPackageManager())!=null){//这句作用是如果没有相机则该应用不会闪退，要是不加这句则当系统没有相机应用的时候该应用会闪退
             if(imageFile!=null){
@@ -47,7 +45,6 @@ public class PhotosUtils {
                 activity.startActivityForResult(takePhotoIntent, REQUEST_CODE_PAIZHAO);//打开相机
             }
         }
-
     }
 
     /**
