@@ -57,8 +57,7 @@ public class MainActivity extends AppCompatActivity implements IView {
          */
         if (Build.VERSION.SDK_INT >= 23) {
             int REQUEST_CODE_CONTACT = 101;
-            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    READ_EXTERNAL_STORAGE,CAMERA
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE,CAMERA
                     };
             //验证是否许可权限
             for (String str : permissions) {

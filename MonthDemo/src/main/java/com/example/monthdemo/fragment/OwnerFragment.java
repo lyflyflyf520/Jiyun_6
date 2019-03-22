@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.monthdemo.R;
 import com.example.monthdemo.bean.MsgEvent;
@@ -93,40 +92,37 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
         String filePath = Environment.getExternalStorageDirectory() + File.separator ;
 
-        Uri filtUri;
+        Uri fileUrl;
         File outputFile = new File(filePath+"tupian_out.jpg");//裁切后输出的图片
         switch (requestCode) {
             case PhotosUtils.REQUEST_CODE_PAIZHAO:
                 //拍照完成，进行图片裁切
-                filtUri = FileProviderUtils.uriFromFile(getActivity(), camerafile);
 
-                PhotosUtils.doCrop(getActivity(), filtUri, outputFile);
+                fileUrl = FileProviderUtils.uriFromFile(getActivity(), outputFile,PhotosUtils.FILE_PROVIDER_AUTHORITY);
+                PhotosUtils.doCrop(getActivity(), fileUrl, outputFile);
                 break;
             case PhotosUtils.REQUEST_CODE_ZHAOPIAN:
                 //相册选择图片完毕，进行图片裁切
                 if (data == null || data.getData() == null) {
                     return;
                 }
-                filtUri = data.getData();
-                PhotosUtils.doCrop(getActivity(), filtUri, outputFile);
+                fileUrl = data.getData();
+                PhotosUtils.doCrop(getActivity(), fileUrl, outputFile);
                 break;
             case PhotosUtils.REQUEST_CODE_CAIQIE:
                 //图片裁切完成，显示裁切后的图片
                 try {
-                    Uri uri = FileProviderUtils.uriFromFile(getActivity(), outputFile);
-//                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
+                    Uri uri = Uri.fromFile(outputFile);
+                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
 
                     RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
-                            .skipMemoryCache(true)
-                            .diskCacheStrategy(DiskCacheStrategy.NONE);
-
+                            .skipMemoryCache(true);//不做内存缓存
 
                     GlideApp.with(this)
-                            .load(uri)
+                            .load(bitmap)
+                            .centerCrop()
                             .apply(mRequestOptions)
                             .into(mUserImg);
-                    // file path
-                    // okhttp
 //                    uploadUserIcon(outputFile);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -208,7 +204,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
         mLoginclick.setOnClickListener(this);
         mUserImg.setOnClickListener(this);
     }
-    File camerafile;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -219,8 +215,17 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                 dialogFromBottom.dismiss();
                 break;
             case R.id.open_from_camera:
-                camerafile = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
-                PhotosUtils.goCamera(getActivity(), camerafile);
+                File file = null;
+                try {
+                    file = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
+                    if(!file.exists()){
+                        file.createNewFile();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                PhotosUtils.goCamera(getActivity(), file);
                 dialogFromBottom.dismiss();
                 break;
             case R.id.loginclick:
