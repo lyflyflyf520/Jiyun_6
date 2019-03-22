@@ -37,12 +37,12 @@ public class PhotosUtils {
                 if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
                     /*7.0以上要通过FileProvider将File转化为Uri*/
                     mImageUri = FileProvider.getUriForFile(activity,FILE_PROVIDER_AUTHORITY,imageFile);
+                    takePhotoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    takePhotoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 }else {
                     /*7.0以下则直接使用Uri的fromFile方法将File转化为Uri*/
                     mImageUri = Uri.fromFile(imageFile);
                 }
-                takePhotoIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                takePhotoIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,mImageUri);//将用于输出的文件Uri传递给相机
                 activity.startActivityForResult(takePhotoIntent, REQUEST_CODE_PAIZHAO);//打开相机
             }

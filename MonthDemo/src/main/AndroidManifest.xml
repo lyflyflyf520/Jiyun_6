@@ -31,11 +31,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.monthdemo"
+            android:authorities="com.example.monthdemo.fileprovider"
             android:grantUriPermissions="true"
             android:exported="false">
             <!--元数据-->
