@@ -91,16 +91,17 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String filePath = Environment.getExternalStorageDirectory() + File.separator;
 
         Uri fileUrl;
-        File outputFile = new File(filePath + "tupian_out.jpg");//裁切后输出的图片
+
+
         switch (requestCode) {
             case PhotosUtils.REQUEST_CODE_PAIZHAO:
                 //拍照完成，进行图片裁切
 
                 fileUrl = FileProviderUtils.uriFromFile(getActivity(), camerafile, PhotosUtils.FILE_PROVIDER_AUTHORITY);
-                PhotosUtils.doCrop(getActivity(), fileUrl, camerafile);
+
+                PhotosUtils.doCrop(getActivity(), fileUrl, cropFile);
                 break;
             case PhotosUtils.REQUEST_CODE_ZHAOPIAN:
                 //相册选择图片完毕，进行图片裁切
@@ -108,12 +109,12 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                     return;
                 }
                 fileUrl = data.getData();
-                PhotosUtils.doCrop(getActivity(), fileUrl, outputFile);
+                PhotosUtils.doCrop(getActivity(), fileUrl, cropFile);
                 break;
             case PhotosUtils.REQUEST_CODE_CAIQIE:
                 //图片裁切完成，显示裁切后的图片
                 try {
-                    Uri uri = Uri.fromFile(outputFile);
+                    Uri uri = Uri.fromFile(cropFile);
 //                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(uri));
 
                     RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
@@ -124,7 +125,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
                             .load(uri)
                             .apply(mRequestOptions)
                             .into(mUserImg);
-                    uploadUserIcon(outputFile);
+//                    uploadUserIcon(cropFile);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -207,6 +208,7 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
     }
 
     File camerafile = null;
+    File cropFile;
 
     @Override
     public void onClick(View v) {
@@ -220,9 +222,16 @@ public class OwnerFragment extends Fragment implements View.OnClickListener {
             case R.id.open_from_camera:
 
                 try {
-                    camerafile = new File(Environment.getExternalStorageDirectory() + File.separator + "xxx.png");
+
+                    String filePath = Environment.getExternalStorageDirectory() + File.separator;
+
+                    cropFile = new File(filePath + System.currentTimeMillis() + ".jpg");//裁切后输出的图片
+                    camerafile = new File(filePath + System.currentTimeMillis() + ".jpg");
                     if (!camerafile.exists()) {
                         camerafile.createNewFile();
+                    }
+                    if (!cropFile.exists()) {
+                        cropFile.createNewFile();
                     }
                     PhotosUtils.goCamera(getActivity(), camerafile);
                 } catch (IOException e) {
